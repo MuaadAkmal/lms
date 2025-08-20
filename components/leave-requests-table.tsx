@@ -85,89 +85,91 @@ export function LeaveRequestsTable({
   }
 
   return (
-    <div className="table-container">
-      <table className="table">
-        <thead className="table-header">
-          <tr>
-            {showUserInfo && (
-              <>
-                <th className="table-header-cell">Employee</th>
-                <th className="table-header-cell">Employee ID</th>
-              </>
-            )}
-            <th className="table-header-cell">Start Date</th>
-            <th className="table-header-cell">End Date</th>
-            <th className="table-header-cell">Reason</th>
-            <th className="table-header-cell">Status</th>
-            <th className="table-header-cell">Submitted</th>
-            {showActions && <th className="table-header-cell">Actions</th>}
-          </tr>
-        </thead>
-        <tbody className="table-body">
-          {requests.map((request) => (
-            <tr key={request.id}>
-              {showUserInfo && request.user && (
+    <div className="overflow-x-auto">
+      <div className={`overflow-y-auto ${requests.length > 4 ? 'max-h-80' : ''}`}>
+        <table className="table">
+          <thead className="table-header sticky top-0 bg-white z-10">
+            <tr>
+              {showUserInfo && (
                 <>
-                  <td className="table-cell">{request.user.name}</td>
-                  <td className="table-cell">{request.user.employeeId}</td>
+                  <th className="table-header-cell">Employee</th>
+                  <th className="table-header-cell">Employee ID</th>
                 </>
               )}
-              <td className="table-cell">
-                {format(new Date(request.startDate), 'MMM dd, yyyy HH:mm')}
-              </td>
-              <td className="table-cell">
-                {format(new Date(request.endDate), 'MMM dd, yyyy HH:mm')}
-              </td>
-              <td className="table-cell">
-                <div className="max-w-xs truncate" title={request.reason}>
-                  {request.reason}
-                </div>
-              </td>
-              <td className="table-cell">
-                <span className={getStatusBadge(request.status)}>
-                  {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
-                </span>
-              </td>
-              <td className="table-cell">
-                {format(new Date(request.createdAt), 'MMM dd, yyyy')}
-              </td>
-              {showActions && (
+              <th className="table-header-cell">Start Date</th>
+              <th className="table-header-cell">End Date</th>
+              <th className="table-header-cell">Reason</th>
+              <th className="table-header-cell">Status</th>
+              <th className="table-header-cell">Submitted</th>
+              {showActions && <th className="table-header-cell">Actions</th>}
+            </tr>
+          </thead>
+          <tbody className="table-body">
+            {requests.map((request) => (
+              <tr key={request.id}>
+                {showUserInfo && request.user && (
+                  <>
+                    <td className="table-cell">{request.user.name}</td>
+                    <td className="table-cell">{request.user.employeeId}</td>
+                  </>
+                )}
                 <td className="table-cell">
-                  <div className="flex space-x-2">
-                    {allowApproval && request.status === 'PENDING' && (
-                      <>
+                  {format(new Date(request.startDate), 'MMM dd, yyyy HH:mm')}
+                </td>
+                <td className="table-cell">
+                  {format(new Date(request.endDate), 'MMM dd, yyyy HH:mm')}
+                </td>
+                <td className="table-cell">
+                  <div className="max-w-xs truncate" title={request.reason}>
+                    {request.reason}
+                  </div>
+                </td>
+                <td className="table-cell">
+                  <span className={getStatusBadge(request.status)}>
+                    {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
+                  </span>
+                </td>
+                <td className="table-cell">
+                  {format(new Date(request.createdAt), 'MMM dd, yyyy')}
+                </td>
+                {showActions && (
+                  <td className="table-cell">
+                    <div className="flex space-x-2">
+                      {allowApproval && request.status === 'PENDING' && (
+                        <>
+                          <button
+                            onClick={() => handleStatusUpdate(request.id, 'APPROVED')}
+                            disabled={isPending}
+                            className="btn-success text-xs py-1 px-2"
+                          >
+                            Approve
+                          </button>
+                          <button
+                            onClick={() => handleStatusUpdate(request.id, 'REJECTED')}
+                            disabled={isPending}
+                            className="btn-danger text-xs py-1 px-2"
+                          >
+                            Reject
+                          </button>
+                        </>
+                      )}
+                      {currentUserId && request.status === 'PENDING' && (
                         <button
-                          onClick={() => handleStatusUpdate(request.id, 'APPROVED')}
-                          disabled={isPending}
-                          className="btn-success text-xs py-1 px-2"
-                        >
-                          Approve
-                        </button>
-                        <button
-                          onClick={() => handleStatusUpdate(request.id, 'REJECTED')}
+                          onClick={() => handleDelete(request.id)}
                           disabled={isPending}
                           className="btn-danger text-xs py-1 px-2"
                         >
-                          Reject
+                          Delete
                         </button>
-                      </>
-                    )}
-                    {currentUserId && request.status === 'PENDING' && (
-                      <button
-                        onClick={() => handleDelete(request.id)}
-                        disabled={isPending}
-                        className="btn-danger text-xs py-1 px-2"
-                      >
-                        Delete
-                      </button>
-                    )}
-                  </div>
-                </td>
-              )}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                      )}
+                    </div>
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }

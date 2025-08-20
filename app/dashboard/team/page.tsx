@@ -1,4 +1,4 @@
-import { getCurrentUser, requireRole } from '@/lib/auth'
+import { requireRole } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { LeaveRequestsTable } from '@/components/leave-requests-table'
 import { SearchAndFilter } from '@/components/search-and-filter'

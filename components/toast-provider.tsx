@@ -54,9 +54,9 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   const showToast = (message: string, type: Toast['type'] = 'info', duration = 5000) => {
     const id = Math.random().toString(36).substr(2, 9)
     const toast: Toast = { id, message, type, duration }
-    
+
     setToasts(prev => [...prev, toast])
-    
+
     if (duration > 0) {
       setTimeout(() => removeToast(id), duration)
     }
@@ -78,12 +78,12 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   )
 }
 
-function ToastContainer({ 
-  toasts, 
-  onRemove 
-}: { 
+function ToastContainer({
+  toasts,
+  onRemove
+}: {
   toasts: Toast[]
-  onRemove: (id: string) => void 
+  onRemove: (id: string) => void
 }) {
   return (
     <div className="fixed top-4 right-4 z-50 space-y-2">
@@ -94,12 +94,12 @@ function ToastContainer({
   )
 }
 
-function ToastItem({ 
-  toast, 
-  onRemove 
-}: { 
+function ToastItem({
+  toast,
+  onRemove
+}: {
   toast: Toast
-  onRemove: (id: string) => void 
+  onRemove: (id: string) => void
 }) {
   const [isVisible, setIsVisible] = useState(false)
 
@@ -115,7 +115,7 @@ function ToastItem({
 
   const getToastStyles = () => {
     const baseStyles = "min-w-80 max-w-md p-4 rounded-lg shadow-strong border transform transition-all duration-300 ease-in-out"
-    
+
     if (!isVisible) {
       return `${baseStyles} translate-x-full opacity-0`
     }

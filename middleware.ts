@@ -2,7 +2,6 @@ import { authMiddleware } from "@clerk/nextjs"
 
 export default authMiddleware({
   publicRoutes: ["/"],
-  ignoredRoutes: ["/api/webhooks/clerk"],
   afterAuth(auth, req, evt) {
     // If user is signed in and trying to access onboarding, allow it
     if (auth.userId && req.nextUrl.pathname === "/onboarding") {

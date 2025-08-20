@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useToast } from '@/components/toast-provider'
 
 export default function SignUpPage() {
@@ -92,7 +93,7 @@ export default function SignUpPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!validateForm()) {
       return
     }
@@ -103,21 +104,21 @@ export default function SignUpPage() {
     try {
       const response = await fetch('/api/register', {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json' 
+        headers: {
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ 
-          name: name.trim(), 
-          employeeId: employeeId.trim(), 
-          email: email.trim().toLowerCase(), 
-          phone: phone.trim(), 
-          password, 
-          role 
+        body: JSON.stringify({
+          name: name.trim(),
+          employeeId: employeeId.trim(),
+          email: email.trim().toLowerCase(),
+          phone: phone.trim(),
+          password,
+          role
         })
       })
 
       const data = await response.json()
-      
+
       if (response.ok && data.success) {
         showSuccess('Account created successfully! Please sign in to continue.')
         // Small delay to let user read the success message
@@ -131,14 +132,14 @@ export default function SignUpPage() {
       }
     } catch (error: any) {
       console.error('Registration error:', error)
-      
+
       let errorMessage = 'An unexpected error occurred. Please try again.'
-      
+
       // Handle network errors
       if (error.name === 'TypeError' && error.message.includes('fetch')) {
         errorMessage = 'Network error. Please check your connection and try again.'
       }
-      
+
       showError(errorMessage)
       setError(errorMessage)
     } finally {
@@ -150,6 +151,16 @@ export default function SignUpPage() {
     <div className="min-h-screen bg-white flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
+          <div className="flex justify-center mb-4">
+            <Image
+              src="/logo.jpg"
+              alt="Leave Management System"
+              width={80}
+              height={80}
+              className="rounded-lg shadow-md"
+              priority
+            />
+          </div>
           <h2 className="text-3xl font-bold text-primary-950 mb-2">
             Create your account
           </h2>
@@ -157,7 +168,7 @@ export default function SignUpPage() {
             Join the Leave Management System
           </p>
         </div>
-        
+
         <div className="card">
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (

@@ -8,9 +8,18 @@ export async function POST(request: NextRequest) {
     const { name, employeeId, email, phone, password, role } = body
 
     // Validate required fields
-    if (!employeeId?.trim() || !email?.trim() || !password || !name?.trim() || !role) {
+    if (
+      !employeeId?.trim() ||
+      !email?.trim() ||
+      !password ||
+      !name?.trim() ||
+      !role
+    ) {
       return NextResponse.json(
-        { error: "Missing required fields. Please fill in all required information." },
+        {
+          error:
+            "Missing required fields. Please fill in all required information.",
+        },
         { status: 400 }
       )
     }
@@ -37,9 +46,9 @@ export async function POST(request: NextRequest) {
       where: {
         OR: [
           { employeeId: employeeId.trim() },
-          { email: email.trim().toLowerCase() }
-        ]
-      }
+          { email: email.trim().toLowerCase() },
+        ],
+      },
     })
 
     if (existingUser) {
@@ -108,17 +117,23 @@ export async function POST(request: NextRequest) {
           Object.keys(p),
           err?.message || err
         )
-        
+
         // Check for specific Clerk errors
-        if (err?.errors?.[0]?.code === 'form_identifier_exists') {
+        if (err?.errors?.[0]?.code === "form_identifier_exists") {
           return NextResponse.json(
-            { error: "An account with this email or employee ID already exists in the authentication system." },
+            {
+              error:
+                "An account with this email or employee ID already exists in the authentication system.",
+            },
             { status: 409 }
           )
         }
-        if (err?.errors?.[0]?.code === 'form_password_pwned') {
+        if (err?.errors?.[0]?.code === "form_password_pwned") {
           return NextResponse.json(
-            { error: "This password has been found in a data breach. Please choose a different password." },
+            {
+              error:
+                "This password has been found in a data breach. Please choose a different password.",
+            },
             { status: 400 }
           )
         }
@@ -127,15 +142,13 @@ export async function POST(request: NextRequest) {
     }
 
     if (!clerkUser) {
-      const errorMessage = lastErr?.errors?.[0]?.longMessage || 
-                          lastErr?.errors?.[0]?.message || 
-                          lastErr?.message || 
-                          "Failed to create user account. Please try again."
-      
-      return NextResponse.json(
-        { error: errorMessage },
-        { status: 400 }
-      )
+      const errorMessage =
+        lastErr?.errors?.[0]?.longMessage ||
+        lastErr?.errors?.[0]?.message ||
+        lastErr?.message ||
+        "Failed to create user account. Please try again."
+
+      return NextResponse.json({ error: errorMessage }, { status: 400 })
     }
 
     // Create Prisma user with error handling
@@ -152,7 +165,7 @@ export async function POST(request: NextRequest) {
       })
     } catch (prismaError: any) {
       console.error("Prisma error during user creation:", prismaError)
-      
+
       // If Prisma fails, try to clean up Clerk user
       try {
         await clerkClient.users.deleteUser(clerkUser.id)
@@ -162,14 +175,14 @@ export async function POST(request: NextRequest) {
       }
 
       // Handle specific Prisma errors
-      if (prismaError.code === 'P2002') {
+      if (prismaError.code === "P2002") {
         const target = prismaError.meta?.target
-        if (Array.isArray(target) && target.includes('employeeId')) {
+        if (Array.isArray(target) && target.includes("employeeId")) {
           return NextResponse.json(
             { error: "An account with this employee ID already exists." },
             { status: 409 }
           )
-        } else if (Array.isArray(target) && target.includes('email')) {
+        } else if (Array.isArray(target) && target.includes("email")) {
           return NextResponse.json(
             { error: "An account with this email address already exists." },
             { status: 409 }
@@ -182,7 +195,7 @@ export async function POST(request: NextRequest) {
         }
       }
 
-      if (prismaError.code === 'P1001') {
+      if (prismaError.code === "P1001") {
         return NextResponse.json(
           { error: "Database connection failed. Please try again later." },
           { status: 503 }
@@ -219,7 +232,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Handle network/timeout errors
-    if (error.name === 'AbortError' || error.code === 'ECONNRESET') {
+    if (error.name === "AbortError" || error.code === "ECONNRESET") {
       return NextResponse.json(
         { error: "Request timeout. Please try again." },
         { status: 408 }
@@ -230,7 +243,7 @@ export async function POST(request: NextRequest) {
       error?.errors?.[0]?.longMessage ||
       error?.message ||
       "An unexpected error occurred. Please try again."
-    
+
     return NextResponse.json(
       { error: message, details: error?.errors || null },
       { status: 500 }

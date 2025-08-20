@@ -33,7 +33,10 @@ export async function getCurrentUser() {
         email: clerkUser.emailAddresses[0]?.emailAddress || "",
         employeeId: (metadata.employeeId as string) || `EMP${Date.now()}`,
         phone: (metadata.phone as string) || null,
-        role: (metadata.role as string) || "EMPLOYEE",
+        role: ((metadata.role as string) || "EMPLOYEE") as
+          | "EMPLOYEE"
+          | "SUPERVISOR"
+          | "ADMIN",
       },
     })
 

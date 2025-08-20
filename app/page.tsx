@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { auth } from '@clerk/nextjs'
 import { redirect } from 'next/navigation'
 
@@ -16,14 +17,18 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14">
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-lg bg-white/40 backdrop-blur-md border border-white/20 flex items-center justify-center shadow-sm">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-sky-600">
-                  <path d="M3 10.5L12 4l9 6.5" stroke="#0369A1" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-                  <path d="M5 21V11h14v10" stroke="#0369A1" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+              <div className="w-11 h-11 rounded-lg overflow-hidden border border-white/20 flex items-center justify-center shadow-sm">
+                <Image
+                  src="/logo.jpg"
+                  alt="Leave Management System"
+                  width={44}
+                  height={44}
+                  className="w-full h-full object-cover"
+                  priority
+                />
               </div>
               <div>
-                <div className="text-sm font-semibold text-slate-800">House Care</div>
+                <div className="text-sm font-semibold text-slate-800">Leave Management</div>
                 <div className="text-xs text-slate-500 -mt-0.5">Leave management & approvals</div>
               </div>
             </div>
@@ -47,30 +52,15 @@ export default function HomePage() {
 
             {/* Left - Content */}
             <div className="space-y-6">
-              <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight">House Care</h1>
+              <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight">Leave Management System</h1>
               <p className="text-lg text-slate-700 max-w-2xl">
-                Simplify leave requests, approvals, and scheduling for households and small teams. Fast approvals, clear visibility, and role-based controls — all in a clean, minimal interface.
+                Simplify leave requests, approvals, and scheduling for organizations. Fast approvals, clear visibility, and role-based controls — all in a clean, minimal interface.
               </p>
 
               <div className="flex items-center gap-4">
                 <Link href="/sign-up" className="inline-flex items-center justify-center rounded-md bg-sky-600 hover:bg-sky-700 text-white text-sm px-4 py-2 shadow-md">
                   Get Started
                 </Link>
-                <Link href="#features" className="inline-flex items-center justify-center rounded-md border border-white/30 text-sm px-4 py-2 bg-white/30 hover:bg-white/40">
-                  Learn More
-                </Link>
-              </div>
-
-              <div className="mt-4 flex gap-6">
-                <div className="text-sm">
-                  <div className="font-semibold text-slate-800">For</div>
-                  <div className="text-xs text-slate-500">Employees • Supervisors • Admins</div>
-                </div>
-
-                <div className="text-sm">
-                  <div className="font-semibold text-slate-800">Privacy</div>
-                  <div className="text-xs text-slate-500">Locally-hosted data, Clerk auth</div>
-                </div>
               </div>
             </div>
 
@@ -139,7 +129,7 @@ export default function HomePage() {
           </section>
 
           <div className="mt-8 text-center text-sm text-slate-500">
-            © {new Date().getFullYear()} House Care — Leave management made simple.
+            © {new Date().getFullYear()} Leave Management System — Leave management made simple.
           </div>
         </div>
       </main>

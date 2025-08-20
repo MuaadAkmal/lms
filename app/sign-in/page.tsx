@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useSignIn } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useToast } from '@/components/toast-provider'
 
 export default function CustomSignInPage() {
@@ -39,16 +40,16 @@ export default function CustomSignInPage() {
     }
 
     // Return the error message from Clerk or a generic fallback
-    return err?.errors?.[0]?.longMessage || 
-           err?.errors?.[0]?.message || 
-           err?.message || 
-           'Sign in failed. Please check your credentials and try again.'
+    return err?.errors?.[0]?.longMessage ||
+      err?.errors?.[0]?.message ||
+      err?.message ||
+      'Sign in failed. Please check your credentials and try again.'
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!isLoaded) return
-    
+
     // Basic validation
     if (!identifier.trim()) {
       showError('Please enter your email or employee ID.')
@@ -114,6 +115,16 @@ export default function CustomSignInPage() {
     <div className="min-h-screen bg-white flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
+          <div className="flex justify-center mb-4">
+            <Image
+              src="/logo.jpg"
+              alt="Leave Management System"
+              width={80}
+              height={80}
+              className="rounded-lg shadow-md"
+              priority
+            />
+          </div>
           <h2 className="text-3xl font-bold text-primary-950 mb-2">
             Sign in to your account
           </h2>
@@ -169,7 +180,7 @@ export default function CustomSignInPage() {
 
           <div className="mt-6 text-center">
             <p className="text-sm text-primary-600">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <Link href="/sign-up" className="font-medium text-primary-950 hover:text-primary-800">
                 Sign up
               </Link>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { assignSupervisor } from '@/lib/actions'
 
@@ -8,12 +8,13 @@ interface User {
   id: string
   name: string
   employeeId: string
+  email: string
   role: string
   supervisorId: string | null
   supervisor?: {
     name: string
     employeeId: string
-  }
+  } | null
 }
 
 interface EmployeeManagementProps {
@@ -47,54 +48,56 @@ export function EmployeeManagement({ employees, supervisors }: EmployeeManagemen
       </div>
 
       <div className="overflow-x-auto">
-        <table className="table">
-          <thead className="table-header">
-            <tr>
-              <th className="table-header-cell">Employee</th>
-              <th className="table-header-cell">Employee ID</th>
-              <th className="table-header-cell">Role</th>
-              <th className="table-header-cell">Current Supervisor</th>
-              <th className="table-header-cell">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="table-body">
-            {employees.map((employee) => (
-              <tr key={employee.id}>
-                <td className="table-cell">{employee.name}</td>
-                <td className="table-cell">{employee.employeeId}</td>
-                <td className="table-cell">
-                  <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                    {employee.role}
-                  </span>
-                </td>
-                <td className="table-cell">
-                  {employee.supervisor ? (
-                    <span className="text-gray-900">
-                      {employee.supervisor.name} ({employee.supervisor.employeeId})
-                    </span>
-                  ) : (
-                    <span className="text-red-500 italic">No supervisor assigned</span>
-                  )}
-                </td>
-                <td className="table-cell">
-                  <select
-                    className="text-sm border border-gray-300 rounded px-2 py-1 disabled:opacity-50"
-                    defaultValue={employee.supervisorId || ''}
-                    disabled={isPending}
-                    onChange={(e) => handleSupervisorAssignment(employee.id, e.target.value)}
-                  >
-                    <option value="">Select Supervisor</option>
-                    {supervisors.map((supervisor) => (
-                      <option key={supervisor.id} value={supervisor.id}>
-                        {supervisor.name} ({supervisor.employeeId})
-                      </option>
-                    ))}
-                  </select>
-                </td>
+        <div className={`overflow-y-auto ${employees.length > 4 ? 'max-h-80' : ''}`}>
+          <table className="table">
+            <thead className="table-header sticky top-0 bg-white z-10">
+              <tr>
+                <th className="table-header-cell">Employee</th>
+                <th className="table-header-cell">Employee ID</th>
+                <th className="table-header-cell">Role</th>
+                <th className="table-header-cell">Current Supervisor</th>
+                <th className="table-header-cell">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="table-body">
+              {employees.map((employee) => (
+                <tr key={employee.id}>
+                  <td className="table-cell">{employee.name}</td>
+                  <td className="table-cell">{employee.employeeId}</td>
+                  <td className="table-cell">
+                    <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      {employee.role}
+                    </span>
+                  </td>
+                  <td className="table-cell">
+                    {employee.supervisor ? (
+                      <span className="text-gray-900">
+                        {employee.supervisor.name} ({employee.supervisor.employeeId})
+                      </span>
+                    ) : (
+                      <span className="text-red-500 italic">No supervisor assigned</span>
+                    )}
+                  </td>
+                  <td className="table-cell">
+                    <select
+                      className="text-sm border border-gray-300 rounded px-2 py-1 disabled:opacity-50"
+                      defaultValue={employee.supervisorId || ''}
+                      disabled={isPending}
+                      onChange={(e) => handleSupervisorAssignment(employee.id, e.target.value)}
+                    >
+                      <option value="">Select Supervisor</option>
+                      {supervisors.map((supervisor) => (
+                        <option key={supervisor.id} value={supervisor.id}>
+                          {supervisor.name} ({supervisor.employeeId})
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {employees.length === 0 && (

@@ -11,7 +11,7 @@ interface User {
   supervisor?: {
     name: string
     employeeId: string
-  }
+  } | null
   _count: {
     leaveRequests: number
     employees: number

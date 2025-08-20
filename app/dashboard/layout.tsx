@@ -1,6 +1,7 @@
 import { UserButton } from '@clerk/nextjs'
 import { getCurrentUser } from '@/lib/auth'
 import Link from 'next/link'
+import Image from 'next/image'
 import { redirect } from 'next/navigation'
 
 interface DashboardLayoutProps {
@@ -14,18 +15,6 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
     redirect('/sign-in')
   }
 
-  const navigationItems = [
-    { name: 'Dashboard', href: '/dashboard', roles: ['employee', 'supervisor', 'admin'] },
-    { name: 'My Requests', href: '/dashboard/requests', roles: ['employee', 'supervisor', 'admin'] },
-    { name: 'Team Requests', href: '/dashboard/team', roles: ['supervisor', 'admin'] },
-    { name: 'All Users', href: '/dashboard/users', roles: ['admin'] },
-    { name: 'All Requests', href: '/dashboard/all-requests', roles: ['admin'] },
-  ]
-
-  const filteredNavItems = navigationItems.filter(item =>
-    item.roles.includes(user.role)
-  )
-
   return (
     <div className="min-h-screen bg-gray-200">
       {/* Header */}
@@ -33,15 +22,25 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <Link href="/dashboard" className="text-2xl font-bold text-primary-950">
-                Leave Management
+              <Link href="/dashboard" className="flex items-center">
+                <Image
+                  src="/logo.jpg"
+                  alt="Leave Management System"
+                  width={40}
+                  height={40}
+                  className="rounded-lg mr-3"
+                  priority
+                />
+                <span className="text-xl font-bold text-primary-950 hidden sm:block">
+                  Leave Management
+                </span>
               </Link>
             </div>
             <div className="flex items-center space-x-4">
               <span className="hidden sm:block text-sm text-primary-600">
                 Welcome, {user.name} ({user.role})
               </span>
-              <UserButton afterSignOutUrl="/" />
+              <UserButton afterSignOutUrl="/sign-in" />
             </div>
           </div>
         </div>

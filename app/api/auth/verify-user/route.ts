@@ -2,15 +2,12 @@ import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@clerk/nextjs"
 import { prisma } from "@/lib/prisma"
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const { userId } = auth()
-    
+
     if (!userId) {
-      return NextResponse.json(
-        { error: "Not authenticated" },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
     }
 
     // Check if user exists in our database
@@ -22,8 +19,8 @@ export async function POST(request: NextRequest) {
         name: true,
         email: true,
         role: true,
-        createdAt: true
-      }
+        createdAt: true,
+      },
     })
 
     if (!user) {
@@ -33,29 +30,28 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    return NextResponse.json({ 
-      success: true, 
+    return NextResponse.json({
+      success: true,
       user: {
         id: user.id,
         employeeId: user.employeeId,
         name: user.name,
         email: user.email,
-        role: user.role
-      }
+        role: user.role,
+      },
     })
-    
   } catch (error: any) {
     console.error("Error verifying user:", error)
-    
+
     // Handle specific Prisma errors
-    if (error.code === 'P2002') {
+    if (error.code === "P2002") {
       return NextResponse.json(
         { error: "Database constraint violation" },
         { status: 400 }
       )
     }
-    
-    if (error.code === 'P2025') {
+
+    if (error.code === "P2025") {
       return NextResponse.json(
         { error: "User record not found" },
         { status: 404 }
@@ -63,17 +59,15 @@ export async function POST(request: NextRequest) {
     }
 
     // Handle database connection errors
-    if (error.code === 'P1001') {
+    if (error.code === "P1001") {
       return NextResponse.json(
         { error: "Database connection failed. Please try again later." },
         { status: 503 }
       )
     }
 
-    const message = error?.message || "Internal server error during user verification"
-    return NextResponse.json(
-      { error: message },
-      { status: 500 }
-    )
+    const message =
+      error?.message || "Internal server error during user verification"
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }

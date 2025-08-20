@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
     const { userId } = auth()
     if (!userId) {
       return NextResponse.json(
-        { error: "Unauthorized. Please sign in to continue." }, 
+        { error: "Unauthorized. Please sign in to continue." },
         { status: 401 }
       )
     }
@@ -16,9 +16,9 @@ export async function POST(request: NextRequest) {
     // Ensure requester is admin in our DB
     let admin
     try {
-      admin = await prisma.user.findUnique({ 
+      admin = await prisma.user.findUnique({
         where: { clerkId: userId },
-        select: { role: true, name: true }
+        select: { role: true, name: true },
       })
     } catch (dbError: any) {
       console.error("Database error during admin verification:", dbError)
@@ -30,18 +30,28 @@ export async function POST(request: NextRequest) {
 
     if (!admin || admin.role !== "ADMIN") {
       return NextResponse.json(
-        { error: "Forbidden. Only administrators can create users." }, 
+        { error: "Forbidden. Only administrators can create users." },
         { status: 403 }
       )
     }
 
     const body = await request.json()
-    const { name, employeeId, email, phone, password, role, supervisorId } = body
+    const { name, employeeId, email, phone, password, role, supervisorId } =
+      body
 
     // Validate required fields
-    if (!name?.trim() || !employeeId?.trim() || !email?.trim() || !password || !role) {
+    if (
+      !name?.trim() ||
+      !employeeId?.trim() ||
+      !email?.trim() ||
+      !password ||
+      !role
+    ) {
       return NextResponse.json(
-        { error: "Missing required fields. Please fill in name, employee ID, email, password, and role." },
+        {
+          error:
+            "Missing required fields. Please fill in name, employee ID, email, password, and role.",
+        },
         { status: 400 }
       )
     }
@@ -68,9 +78,9 @@ export async function POST(request: NextRequest) {
       where: {
         OR: [
           { employeeId: employeeId.trim() },
-          { email: email.trim().toLowerCase() }
-        ]
-      }
+          { email: email.trim().toLowerCase() },
+        ],
+      },
     })
 
     if (existingUser) {
@@ -91,12 +101,15 @@ export async function POST(request: NextRequest) {
     if (supervisorId) {
       const supervisor = await prisma.user.findUnique({
         where: { id: supervisorId },
-        select: { role: true }
+        select: { role: true },
       })
 
       if (!supervisor) {
         return NextResponse.json(
-          { error: "Invalid supervisor selected. Please choose a valid supervisor." },
+          {
+            error:
+              "Invalid supervisor selected. Please choose a valid supervisor.",
+          },
           { status: 400 }
         )
       }
@@ -124,30 +137,34 @@ export async function POST(request: NextRequest) {
       })
     } catch (clerkError: any) {
       console.error("Clerk user creation error:", clerkError)
-      
+
       // Handle specific Clerk errors
-      if (clerkError?.errors?.[0]?.code === 'form_identifier_exists') {
+      if (clerkError?.errors?.[0]?.code === "form_identifier_exists") {
         return NextResponse.json(
-          { error: "An account with this email or employee ID already exists in the authentication system." },
+          {
+            error:
+              "An account with this email or employee ID already exists in the authentication system.",
+          },
           { status: 409 }
         )
       }
-      if (clerkError?.errors?.[0]?.code === 'form_password_pwned') {
+      if (clerkError?.errors?.[0]?.code === "form_password_pwned") {
         return NextResponse.json(
-          { error: "This password has been found in a data breach. Please choose a different password." },
+          {
+            error:
+              "This password has been found in a data breach. Please choose a different password.",
+          },
           { status: 400 }
         )
       }
 
-      const errorMessage = clerkError?.errors?.[0]?.longMessage || 
-                          clerkError?.errors?.[0]?.message || 
-                          clerkError?.message || 
-                          "Failed to create user account in authentication system."
-      
-      return NextResponse.json(
-        { error: errorMessage },
-        { status: 400 }
-      )
+      const errorMessage =
+        clerkError?.errors?.[0]?.longMessage ||
+        clerkError?.errors?.[0]?.message ||
+        clerkError?.message ||
+        "Failed to create user account in authentication system."
+
+      return NextResponse.json({ error: errorMessage }, { status: 400 })
     }
 
     // create prisma user
@@ -165,7 +182,7 @@ export async function POST(request: NextRequest) {
       })
     } catch (prismaError: any) {
       console.error("Prisma error during user creation:", prismaError)
-      
+
       // If Prisma fails, try to clean up Clerk user
       try {
         await clerkClient.users.deleteUser(clerkUser.id)
@@ -175,14 +192,14 @@ export async function POST(request: NextRequest) {
       }
 
       // Handle specific Prisma errors
-      if (prismaError.code === 'P2002') {
+      if (prismaError.code === "P2002") {
         const target = prismaError.meta?.target
-        if (Array.isArray(target) && target.includes('employeeId')) {
+        if (Array.isArray(target) && target.includes("employeeId")) {
           return NextResponse.json(
             { error: "An account with this employee ID already exists." },
             { status: 409 }
           )
-        } else if (Array.isArray(target) && target.includes('email')) {
+        } else if (Array.isArray(target) && target.includes("email")) {
           return NextResponse.json(
             { error: "An account with this email address already exists." },
             { status: 409 }
@@ -190,7 +207,7 @@ export async function POST(request: NextRequest) {
         }
       }
 
-      if (prismaError.code === 'P1001') {
+      if (prismaError.code === "P1001") {
         return NextResponse.json(
           { error: "Database connection failed. Please try again later." },
           { status: 503 }
@@ -203,13 +220,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    return NextResponse.json({ 
-      success: true, 
-      message: `User ${name.trim()} (${employeeId.trim()}) created successfully.` 
+    return NextResponse.json({
+      success: true,
+      message: `User ${name.trim()} (${employeeId.trim()}) created successfully.`,
     })
   } catch (error: any) {
     console.error("Error in /api/admin/create-user:", error)
-    
+
     // Handle JSON parsing errors
     if (error instanceof SyntaxError) {
       return NextResponse.json(
@@ -219,14 +236,15 @@ export async function POST(request: NextRequest) {
     }
 
     // Handle network/timeout errors
-    if (error.name === 'AbortError' || error.code === 'ECONNRESET') {
+    if (error.name === "AbortError" || error.code === "ECONNRESET") {
       return NextResponse.json(
         { error: "Request timeout. Please try again." },
         { status: 408 }
       )
     }
 
-    const message = error?.message || "An unexpected error occurred while creating the user."
+    const message =
+      error?.message || "An unexpected error occurred while creating the user."
     return NextResponse.json({ error: message }, { status: 500 })
   }
 }

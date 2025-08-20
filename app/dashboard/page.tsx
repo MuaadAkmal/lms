@@ -5,7 +5,6 @@ import { LeaveRequestsTable } from '@/components/leave-requests-table'
 import { DashboardStats } from '@/components/dashboard-stats'
 import { EmployeeManagement } from '@/components/employee-management'
 import { EmployeeSearch } from '@/components/employee-search'
-import { AdminCreateUser } from '@/components/admin-create-user'
 import { assignSupervisor, updateLeaveRequestStatus } from '@/lib/actions'
 
 async function approveRequest(requestId: string) {
@@ -82,7 +81,7 @@ export default async function DashboardPage() {
     const employeesUnder = await prisma.user.count({
       where: { supervisorId: user.id }
     })
-    
+
     const requestsToday = await prisma.leaveRequest.count({
       where: {
         user: { supervisorId: user.id },
@@ -104,11 +103,11 @@ export default async function DashboardPage() {
     const totalEmployees = await prisma.user.count({
       where: { role: { not: 'ADMIN' } }
     })
-    
+
     const unassignedEmployees = await prisma.user.count({
-      where: { 
-        role: 'EMPLOYEE', 
-        supervisorId: null 
+      where: {
+        role: 'EMPLOYEE',
+        supervisorId: null
       }
     })
 
@@ -120,9 +119,9 @@ export default async function DashboardPage() {
   }
 
   // For admin and supervisor, fetch detailed employee data with leave requests
-  const employeesWithDetails = (user.role === 'ADMIN' || user.role === 'SUPERVISOR') ? 
+  const employeesWithDetails = (user.role === 'ADMIN' || user.role === 'SUPERVISOR') ?
     await prisma.user.findMany({
-      where: user.role === 'ADMIN' ? {} : { supervisorId: user.id },
+      where: user.role === 'ADMIN' ? { role: { not: 'ADMIN' } } : { supervisorId: user.id },
       select: {
         id: true,
         name: true,
@@ -159,10 +158,12 @@ export default async function DashboardPage() {
 
   // For admin, fetch all users and supervisors for employee assignment
   const allUsers = user.role === 'ADMIN' ? await prisma.user.findMany({
+    where: { role: { not: 'ADMIN' } },
     select: {
       id: true,
       name: true,
       employeeId: true,
+      email: true,
       role: true,
       supervisorId: true,
       supervisor: {
@@ -175,18 +176,19 @@ export default async function DashboardPage() {
     orderBy: { name: 'asc' }
   }) : []
 
-  const supervisors = user.role === 'ADMIN' ? allUsers.filter((u: any) => u.role === 'SUPERVISOR') : 
+  const supervisors = user.role === 'ADMIN' ? allUsers.filter((u: any) => u.role === 'SUPERVISOR') :
     user.role === 'SUPERVISOR' ? [] :
-    await prisma.user.findMany({
-      where: { role: 'SUPERVISOR' },
-      select: {
-        id: true,
-        name: true,
-        employeeId: true,
-        role: true,
-        supervisorId: true
-      }
-    })
+      await prisma.user.findMany({
+        where: { role: 'SUPERVISOR' },
+        select: {
+          id: true,
+          name: true,
+          employeeId: true,
+          email: true,
+          role: true,
+          supervisorId: true
+        }
+      })
 
   return (
     <div className="space-y-6">
@@ -252,12 +254,6 @@ export default async function DashboardPage() {
           employees={allUsers.filter((u: any) => u.role === 'EMPLOYEE')}
           supervisors={supervisors}
         />
-      )}
-
-      {user.role === 'ADMIN' && (
-        <div className="card">
-          <AdminCreateUser supervisors={supervisors} />
-        </div>
       )}
 
       {/* Additional sections for Supervisors and Admins */}

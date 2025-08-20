@@ -20,7 +20,7 @@ export function CompleteRegistration() {
       setError('Employee ID is required.')
       return false
     }
-    
+
     // Basic employee ID format validation
     if (employeeId.trim().length < 3) {
       showError('Employee ID must be at least 3 characters long.')
@@ -40,7 +40,7 @@ export function CompleteRegistration() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!validateForm()) {
       return
     }
@@ -67,9 +67,9 @@ export function CompleteRegistration() {
         }
       } catch (error: any) {
         console.error('Registration error:', error)
-        
+
         let errorMessage = 'Failed to complete registration. Please try again.'
-        
+
         // Handle specific error types
         if (error.message?.includes('duplicate') || error.message?.includes('unique')) {
           if (error.message?.includes('employeeId')) {
@@ -82,7 +82,7 @@ export function CompleteRegistration() {
         } else if (error.message?.includes('unauthorized') || error.message?.includes('authentication')) {
           errorMessage = 'Authentication error. Please sign out and sign in again.'
         }
-        
+
         showError(errorMessage)
         setError(errorMessage)
       }

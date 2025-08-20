@@ -14,7 +14,7 @@ interface Employee {
   supervisor?: {
     name: string
     employeeId: string
-  }
+  } | null
   _count?: {
     leaveRequests: number
   }
@@ -38,11 +38,10 @@ interface EmployeeSearchProps {
   onRejectRequest?: (requestId: string) => void
 }
 
-export function EmployeeSearch({ 
-  employees, 
-  supervisors, 
-  userRole, 
-  currentUserId,
+export function EmployeeSearch({
+  employees,
+  supervisors,
+  userRole,
   onAssignSupervisor,
   onApproveRequest,
   onRejectRequest
@@ -57,14 +56,17 @@ export function EmployeeSearch({
 
   // Filter employees based on search criteria
   const filteredEmployees = employees.filter(employee => {
-    const matchesSearch = searchTerm === '' || 
+    // Don't show admin users in any employee table
+    if (employee.role === 'ADMIN') return false
+
+    const matchesSearch = searchTerm === '' ||
       employee.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       employee.employeeId.toLowerCase().includes(searchTerm.toLowerCase()) ||
       employee.email.toLowerCase().includes(searchTerm.toLowerCase())
 
     const matchesRole = roleFilter === 'all' || employee.role === roleFilter
 
-    const matchesSupervisor = supervisorFilter === 'all' || 
+    const matchesSupervisor = supervisorFilter === 'all' ||
       (supervisorFilter === 'unassigned' && !employee.supervisorId) ||
       (supervisorFilter === 'assigned' && employee.supervisorId) ||
       employee.supervisorId === supervisorFilter
@@ -165,7 +167,6 @@ export function EmployeeSearch({
               <option value="all">All Roles</option>
               <option value="EMPLOYEE">Employee</option>
               <option value="SUPERVISOR">Supervisor</option>
-              <option value="ADMIN">Admin</option>
             </select>
           </div>
         )}
@@ -215,147 +216,147 @@ export function EmployeeSearch({
 
       {/* Employee Table */}
       <div className="overflow-x-auto">
-        <table className="table">
-          <thead className="table-header">
-            <tr>
-              <th className="table-header-cell">Employee</th>
-              <th className="table-header-cell">Employee ID</th>
-              <th className="table-header-cell">Email</th>
-              <th className="table-header-cell">Role</th>
-              <th className="table-header-cell">Supervisor</th>
-              <th className="table-header-cell">Leave Requests</th>
-              <th className="table-header-cell">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="table-body">
-            {filteredEmployees.map((employee) => (
-              <React.Fragment key={employee.id}>
-                <tr className="hover:bg-gray-50">
-                  <td className="table-cell">
-                    <div className="font-medium text-gray-900">{employee.name}</div>
-                  </td>
-                  <td className="table-cell">
-                    <span className="font-mono text-sm">{employee.employeeId}</span>
-                  </td>
-                  <td className="table-cell">
-                    <span className="text-sm text-gray-600">{employee.email}</span>
-                  </td>
-                  <td className="table-cell">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      employee.role === 'ADMIN' ? 'bg-purple-100 text-purple-800' :
-                      employee.role === 'SUPERVISOR' ? 'bg-blue-100 text-blue-800' :
-                      'bg-green-100 text-green-800'
-                    }`}>
-                      {employee.role}
-                    </span>
-                  </td>
-                  <td className="table-cell">
-                    {employee.supervisor ? (
-                      <div className="text-sm">
-                        <div className="font-medium">{employee.supervisor.name}</div>
-                        <div className="text-gray-500">({employee.supervisor.employeeId})</div>
-                      </div>
-                    ) : (
-                      <span className="text-red-500 italic text-sm">No supervisor assigned</span>
-                    )}
-                  </td>
-                  <td className="table-cell">
-                    <button
-                      onClick={() => toggleLeaveRequests(employee.id)}
-                      className="flex items-center space-x-2 text-blue-600 hover:text-blue-800 text-sm"
-                    >
-                      <span>{employee._count?.leaveRequests || 0} requests</span>
-                      <svg 
-                        className={`w-4 h-4 transform transition-transform ${
-                          showLeaveRequests === employee.id ? 'rotate-180' : ''
-                        }`} 
-                        fill="none" 
-                        stroke="currentColor" 
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                  </td>
-                  <td className="table-cell">
-                    <div className="flex space-x-2">
-                      {userRole === 'ADMIN' && employee.role === 'EMPLOYEE' && onAssignSupervisor && (
-                        <select
-                          className="text-xs border border-gray-300 rounded px-2 py-1 disabled:opacity-50"
-                          defaultValue={employee.supervisorId || ''}
-                          disabled={isPending}
-                          onChange={(e) => handleSupervisorAssignment(employee.id, e.target.value)}
-                        >
-                          <option value="">Select Supervisor</option>
-                          {supervisors.map((supervisor) => (
-                            <option key={supervisor.id} value={supervisor.id}>
-                              {supervisor.name}
-                            </option>
-                          ))}
-                        </select>
+        <div className={`overflow-y-auto ${filteredEmployees.length > 4 ? 'max-h-80' : ''}`}>
+          <table className="table">
+            <thead className="table-header sticky top-0 bg-white z-10">
+              <tr>
+                <th className="table-header-cell">Employee</th>
+                <th className="table-header-cell">Employee ID</th>
+                <th className="table-header-cell">Email</th>
+                <th className="table-header-cell">Role</th>
+                <th className="table-header-cell">Supervisor</th>
+                <th className="table-header-cell">Leave Requests</th>
+                <th className="table-header-cell">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="table-body">
+              {filteredEmployees.map((employee) => (
+                <React.Fragment key={employee.id}>
+                  <tr className="hover:bg-gray-50">
+                    <td className="table-cell">
+                      <div className="font-medium text-gray-900">{employee.name}</div>
+                    </td>
+                    <td className="table-cell">
+                      <span className="font-mono text-sm">{employee.employeeId}</span>
+                    </td>
+                    <td className="table-cell">
+                      <span className="text-sm text-gray-600">{employee.email}</span>
+                    </td>
+                    <td className="table-cell">
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${employee.role === 'ADMIN' ? 'bg-purple-100 text-purple-800' :
+                          employee.role === 'SUPERVISOR' ? 'bg-blue-100 text-blue-800' :
+                            'bg-green-100 text-green-800'
+                        }`}>
+                        {employee.role}
+                      </span>
+                    </td>
+                    <td className="table-cell">
+                      {employee.supervisor ? (
+                        <div className="text-sm">
+                          <div className="font-medium">{employee.supervisor.name}</div>
+                          <div className="text-gray-500">({employee.supervisor.employeeId})</div>
+                        </div>
+                      ) : (
+                        <span className="text-red-500 italic text-sm">No supervisor assigned</span>
                       )}
-                    </div>
-                  </td>
-                </tr>
-
-                {/* Expandable Leave Requests */}
-                {showLeaveRequests === employee.id && employee.leaveRequests && (
-                  <tr>
-                    <td colSpan={7} className="table-cell bg-gray-50">
-                      <div className="p-4">
-                        <h4 className="font-medium text-gray-900 mb-3">Leave Requests</h4>
-                        {employee.leaveRequests.length > 0 ? (
-                          <div className="space-y-2">
-                            {employee.leaveRequests.map((request) => (
-                              <div key={request.id} className="bg-white p-3 rounded-lg border border-gray-200">
-                                <div className="flex items-center justify-between">
-                                  <div className="flex-1">
-                                    <div className="flex items-center space-x-4">
-                                      <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusBadge(request.status)}`}>
-                                        {request.status}
-                                      </span>
-                                      <span className="text-sm text-gray-600">
-                                        {formatDate(request.startDate)} - {formatDate(request.endDate)}
-                                      </span>
-                                      <span className="text-sm text-gray-500">
-                                        Requested: {formatDate(request.createdAt)}
-                                      </span>
-                                    </div>
-                                    <p className="text-sm text-gray-700 mt-1">{request.reason}</p>
-                                  </div>
-                                  {(userRole === 'SUPERVISOR' || userRole === 'ADMIN') && request.status === 'PENDING' && (
-                                    <div className="flex space-x-2 ml-4">
-                                      <button
-                                        onClick={() => handleRequestAction(request.id, 'approve')}
-                                        disabled={isPending}
-                                        className="px-3 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700 disabled:opacity-50"
-                                      >
-                                        Approve
-                                      </button>
-                                      <button
-                                        onClick={() => handleRequestAction(request.id, 'reject')}
-                                        disabled={isPending}
-                                        className="px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700 disabled:opacity-50"
-                                      >
-                                        Reject
-                                      </button>
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
+                    </td>
+                    <td className="table-cell">
+                      <button
+                        onClick={() => toggleLeaveRequests(employee.id)}
+                        className="flex items-center space-x-2 text-blue-600 hover:text-blue-800 text-sm"
+                      >
+                        <span>{employee._count?.leaveRequests || 0} requests</span>
+                        <svg
+                          className={`w-4 h-4 transform transition-transform ${showLeaveRequests === employee.id ? 'rotate-180' : ''
+                            }`}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                    </td>
+                    <td className="table-cell">
+                      <div className="flex space-x-2">
+                        {userRole === 'ADMIN' && employee.role === 'EMPLOYEE' && onAssignSupervisor && (
+                          <select
+                            className="text-xs border border-gray-300 rounded px-2 py-1 disabled:opacity-50"
+                            defaultValue={employee.supervisorId || ''}
+                            disabled={isPending}
+                            onChange={(e) => handleSupervisorAssignment(employee.id, e.target.value)}
+                          >
+                            <option value="">Select Supervisor</option>
+                            {supervisors.map((supervisor) => (
+                              <option key={supervisor.id} value={supervisor.id}>
+                                {supervisor.name}
+                              </option>
                             ))}
-                          </div>
-                        ) : (
-                          <p className="text-gray-500 text-sm">No leave requests found.</p>
+                          </select>
                         )}
                       </div>
                     </td>
                   </tr>
-                )}
-              </React.Fragment>
-            ))}
-          </tbody>
-        </table>
+
+                  {/* Expandable Leave Requests */}
+                  {showLeaveRequests === employee.id && employee.leaveRequests && (
+                    <tr>
+                      <td colSpan={7} className="table-cell bg-gray-50">
+                        <div className="p-4">
+                          <h4 className="font-medium text-gray-900 mb-3">Leave Requests</h4>
+                          {employee.leaveRequests.length > 0 ? (
+                            <div className="space-y-2">
+                              {employee.leaveRequests.map((request) => (
+                                <div key={request.id} className="bg-white p-3 rounded-lg border border-gray-200">
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex-1">
+                                      <div className="flex items-center space-x-4">
+                                        <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusBadge(request.status)}`}>
+                                          {request.status}
+                                        </span>
+                                        <span className="text-sm text-gray-600">
+                                          {formatDate(request.startDate)} - {formatDate(request.endDate)}
+                                        </span>
+                                        <span className="text-sm text-gray-500">
+                                          Requested: {formatDate(request.createdAt)}
+                                        </span>
+                                      </div>
+                                      <p className="text-sm text-gray-700 mt-1">{request.reason}</p>
+                                    </div>
+                                    {(userRole === 'SUPERVISOR' || userRole === 'ADMIN') && request.status === 'PENDING' && (
+                                      <div className="flex space-x-2 ml-4">
+                                        <button
+                                          onClick={() => handleRequestAction(request.id, 'approve')}
+                                          disabled={isPending}
+                                          className="px-3 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700 disabled:opacity-50"
+                                        >
+                                          Approve
+                                        </button>
+                                        <button
+                                          onClick={() => handleRequestAction(request.id, 'reject')}
+                                          disabled={isPending}
+                                          className="px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700 disabled:opacity-50"
+                                        >
+                                          Reject
+                                        </button>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="text-gray-500 text-sm">No leave requests found.</p>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {filteredEmployees.length === 0 && (
