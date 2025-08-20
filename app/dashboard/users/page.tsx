@@ -28,9 +28,9 @@ export default async function UsersPage() {
   // Calculate user stats
   const stats = {
     total: users.length,
-    employees: users.filter(u => u.role === 'EMPLOYEE').length,
-    supervisors: users.filter(u => u.role === 'SUPERVISOR').length,
-    admins: users.filter(u => u.role === 'ADMIN').length
+    employees: users.filter((u: any) => u.role === 'EMPLOYEE').length,
+    supervisors: users.filter((u: any) => u.role === 'SUPERVISOR').length,
+    admins: users.filter((u: any) => u.role === 'ADMIN').length
   }
 
   return (
