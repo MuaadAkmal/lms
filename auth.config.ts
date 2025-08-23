@@ -39,35 +39,43 @@ export const authConfig = {
   providers: [
     Credentials({
       async authorize(credentials) {
-        if (!credentials?.employeeId || !credentials?.password) {
+        try {
+          if (!credentials?.employeeId || !credentials?.password) {
+            return null
+          }
+
+          const user = await prisma.user.findUnique({
+            where: {
+              employeeId: credentials.employeeId as string,
+            },
+          })
+
+          if (!user) {
+            return null
+          }
+
+          // Type assertion for password field
+          const userWithPassword = user as any
+
+          const passwordsMatch = await bcrypt.compare(
+            credentials.password as string,
+            userWithPassword.password
+          )
+
+          if (!passwordsMatch) {
+            return null
+          }
+
+          return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            employeeId: user.employeeId,
+          }
+        } catch (error) {
+          console.error('Auth error:', error)
           return null
-        }
-
-        const user = await prisma.user.findUnique({
-          where: {
-            employeeId: credentials.employeeId as string,
-          },
-        })
-
-        if (!user) {
-          return null
-        }
-
-        const passwordsMatch = await bcrypt.compare(
-          credentials.password as string,
-          user.password
-        )
-
-        if (!passwordsMatch) {
-          return null
-        }
-
-        return {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          employeeId: user.employeeId,
         }
       },
     }),

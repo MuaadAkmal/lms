@@ -48,7 +48,7 @@ export default function SignInPage() {
 
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!employeeId || !password || !newPassword || !confirmPassword) {
       setError('Please fill in all fields.')
       return
@@ -77,10 +77,10 @@ export default function SignInPage() {
       const response = await fetch('/api/auth/change-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           employeeId: employeeId.trim(),
           oldPassword: password,
-          newPassword 
+          newPassword
         }),
       })
 
@@ -130,7 +130,7 @@ export default function SignInPage() {
             {isChangePasswordMode ? 'Change your password' : 'Sign in to your account'}
           </h2>
           <p className="text-primary-600">
-            {isChangePasswordMode 
+            {isChangePasswordMode
               ? 'Enter your current password and set a new one'
               : 'Welcome back to Leave Management System'
             }
@@ -221,15 +221,15 @@ export default function SignInPage() {
               disabled={isLoading}
               className="btn-primary w-full disabled:opacity-50"
             >
-              {isLoading 
-                ? (isChangePasswordMode ? 'Changing Password...' : 'Signing in...') 
+              {isLoading
+                ? (isChangePasswordMode ? 'Changing Password...' : 'Signing in...')
                 : (isChangePasswordMode ? 'Change Password' : 'Sign In')
               }
             </button>
           </form>
 
           <div className="mt-6 text-center">
-            <button 
+            <button
               onClick={switchMode}
               className="text-sm text-primary-600 hover:text-primary-800 underline"
             >

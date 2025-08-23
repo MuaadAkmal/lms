@@ -32,8 +32,11 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Type assertion for password field
+    const userWithPassword = user as any
+
     // Verify the old password
-    const isOldPasswordValid = await bcrypt.compare(oldPassword, user.password)
+    const isOldPasswordValid = await bcrypt.compare(oldPassword, userWithPassword.password)
 
     if (!isOldPasswordValid) {
       return NextResponse.json(
@@ -43,7 +46,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if new password is different from old password
-    const isSamePassword = await bcrypt.compare(newPassword, user.password)
+    const isSamePassword = await bcrypt.compare(newPassword, userWithPassword.password)
 
     if (isSamePassword) {
       return NextResponse.json(
@@ -58,7 +61,7 @@ export async function POST(request: NextRequest) {
     // Update the user's password
     await prisma.user.update({
       where: { employeeId: employeeId.trim() },
-      data: { password: hashedNewPassword },
+      data: { password: hashedNewPassword } as any,
     })
 
     return NextResponse.json({
