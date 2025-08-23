@@ -10,24 +10,28 @@
     "postinstall": "prisma generate",
     "db:push": "prisma db push",
     "db:generate": "prisma generate",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "db:seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
-    "@clerk/nextjs": "^4.29.9",
+    "@auth/prisma-adapter": "^2.10.0",
+    "@hookform/resolvers": "^3.3.2",
     "@prisma/client": "^5.7.1",
+    "bcryptjs": "^3.0.2",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.0.0",
+    "date-fns": "^2.30.0",
+    "lucide-react": "^0.294.0",
     "next": "14.2.13",
+    "next-auth": "5.0.0-beta.29",
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.48.2",
-    "@hookform/resolvers": "^3.3.2",
-    "zod": "^3.22.4",
-    "date-fns": "^2.30.0",
-    "lucide-react": "^0.294.0",
-    "class-variance-authority": "^0.7.0",
-    "clsx": "^2.0.0",
-    "tailwind-merge": "^2.2.0"
+    "tailwind-merge": "^2.2.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^3.0.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
@@ -37,6 +41,7 @@
     "postcss": "^8",
     "prisma": "^5.7.1",
     "tailwindcss": "^3.3.0",
+    "tsx": "^4.20.4",
     "typescript": "^5"
   }
 }

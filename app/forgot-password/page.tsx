@@ -1,40 +1,38 @@
 'use client'
 
 import { useState } from 'react'
-import { signIn } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 
-export default function SignInPage() {
+export default function ForgotPasswordPage() {
   const [employeeId, setEmployeeId] = useState('')
-  const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [message, setMessage] = useState('')
   const [error, setError] = useState('')
-  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!employeeId.trim() || !password.trim()) {
-      setError('Please enter both employee ID and password.')
+    if (!employeeId.trim()) {
+      setError('Please enter your employee ID.')
       return
     }
 
     setIsLoading(true)
     setError('')
+    setMessage('')
 
     try {
-      const result = await signIn('credentials', {
-        employeeId: employeeId.trim(),
-        password,
-        redirect: false,
+      const response = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ employeeId: employeeId.trim() }),
       })
 
-      if (result?.error) {
-        setError('Invalid employee ID or password. Please try again.')
+      if (response.ok) {
+        setMessage('Password reset instructions have been sent to your admin. Please contact your administrator.')
       } else {
-        router.push('/dashboard')
-        router.refresh()
+        const data = await response.json()
+        setError(data.error || 'Employee ID not found.')
       }
     } catch (error) {
       setError('An error occurred. Please try again.')
@@ -58,10 +56,10 @@ export default function SignInPage() {
             />
           </div>
           <h2 className="text-3xl font-bold text-primary-950 mb-2">
-            Sign in to your account
+            Reset your password
           </h2>
           <p className="text-primary-600">
-            Welcome back to Leave Management System
+            Enter your employee ID and we&apos;ll help you reset your password
           </p>
         </div>
         <div className="card">
@@ -69,6 +67,12 @@ export default function SignInPage() {
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
                 {error}
+              </div>
+            )}
+
+            {message && (
+              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded">
+                {message}
               </div>
             )}
 
@@ -87,34 +91,20 @@ export default function SignInPage() {
               />
             </div>
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-primary-700 mb-1">
-                Password
-              </label>
-              <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="input-field"
-                required
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <Link href="/forgot-password" className="text-sm text-primary-600 hover:text-primary-800">
-                Forgot your password?
-              </Link>
-            </div>
-
             <button
               type="submit"
               disabled={isLoading}
               className="btn-primary w-full disabled:opacity-50"
             >
-              {isLoading ? 'Signing in...' : 'Sign In'}
+              {isLoading ? 'Processing...' : 'Reset Password'}
             </button>
           </form>
+
+          <div className="mt-6 text-center">
+            <Link href="/sign-in" className="text-sm text-primary-600 hover:text-primary-800">
+              Back to sign in
+            </Link>
+          </div>
         </div>
       </div>
     </div>

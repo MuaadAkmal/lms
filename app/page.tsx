@@ -1,12 +1,12 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { auth } from '@clerk/nextjs'
+import { auth } from '@/auth'
 import { redirect } from 'next/navigation'
 
-export default function HomePage() {
-  const { userId } = auth()
+export default async function HomePage() {
+  const session = await auth()
 
-  if (userId) {
+  if (session?.user) {
     redirect('/dashboard')
   }
 
@@ -34,11 +34,8 @@ export default function HomePage() {
             </div>
 
             <div className="flex items-center space-x-3">
-              <Link href="/sign-in" className="text-sm px-3 py-1.5 rounded-md bg-white/60 hover:bg-white/70 transition-shadow shadow-sm border border-white/10">
+              <Link href="/sign-in" className="text-sm px-3 py-1.5 rounded-md bg-sky-600 text-white hover:bg-sky-700 transition-shadow shadow">
                 Sign In
-              </Link>
-              <Link href="/sign-up" className="text-sm px-3 py-1.5 rounded-md bg-sky-600 text-white hover:bg-sky-700 transition-shadow shadow">
-                Sign Up
               </Link>
             </div>
           </div>
@@ -58,8 +55,8 @@ export default function HomePage() {
               </p>
 
               <div className="flex items-center gap-4">
-                <Link href="/sign-up" className="inline-flex items-center justify-center rounded-md bg-sky-600 hover:bg-sky-700 text-white text-sm px-4 py-2 shadow-md">
-                  Get Started
+                <Link href="/sign-in" className="inline-flex items-center justify-center rounded-md bg-sky-600 hover:bg-sky-700 text-white text-sm px-4 py-2 shadow-md">
+                  Sign In
                 </Link>
               </div>
             </div>

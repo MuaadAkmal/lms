@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 export function AdminCreateUser({ supervisors }: { supervisors: any[] }) {
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [name, setName] = useState('')
   const [employeeId, setEmployeeId] = useState('')
   const [email, setEmail] = useState('')
@@ -25,7 +26,7 @@ export function AdminCreateUser({ supervisors }: { supervisors: any[] }) {
       })
       const data = await res.json()
       if (res.ok) {
-        alert('User created')
+        alert('User created successfully!')
         router.refresh()
         // clear form
         setName('')
@@ -35,6 +36,7 @@ export function AdminCreateUser({ supervisors }: { supervisors: any[] }) {
         setPassword('')
         setRole('EMPLOYEE')
         setSupervisorId('')
+        setIsModalOpen(false)
       } else {
         alert(data?.error || 'Failed to create user')
       }
@@ -47,37 +49,156 @@ export function AdminCreateUser({ supervisors }: { supervisors: any[] }) {
   }
 
   return (
-    <div className="card">
-      <div className="flex items-center mb-4">
-        <h3 className="text-lg font-semibold">Create User (Admin)</h3>
-      </div>
-      <form onSubmit={handleSubmit} className="space-y-3">
-        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Full name" className="input-field" required />
-        <input value={employeeId} onChange={(e) => setEmployeeId(e.target.value)} placeholder="Employee ID" className="input-field" required />
-        <input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" className="input-field" required />
-        <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone (optional)" className="input-field" />
-        <input value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" className="input-field" required />
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
-          <select value={role} onChange={(e) => setRole(e.target.value)} className="input-field">
-            <option value="EMPLOYEE">Employee</option>
-            <option value="SUPERVISOR">Supervisor</option>
-            <option value="ADMIN">Admin</option>
-          </select>
+    <>
+      {/* Create User Button */}
+      <button
+        onClick={() => setIsModalOpen(true)}
+        className="btn-primary flex items-center"
+      >
+        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+        </svg>
+        Add New User
+      </button>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Create New User</h3>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Full Name
+                </label>
+                <input 
+                  value={name} 
+                  onChange={(e) => setName(e.target.value)} 
+                  placeholder="Enter full name" 
+                  className="input-field" 
+                  required 
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Employee ID
+                </label>
+                <input 
+                  value={employeeId} 
+                  onChange={(e) => setEmployeeId(e.target.value)} 
+                  placeholder="e.g., EMP001" 
+                  className="input-field" 
+                  required 
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Email
+                </label>
+                <input 
+                  type="email"
+                  value={email} 
+                  onChange={(e) => setEmail(e.target.value)} 
+                  placeholder="Enter email address" 
+                  className="input-field" 
+                  required 
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Phone (Optional)
+                </label>
+                <input 
+                  value={phone} 
+                  onChange={(e) => setPhone(e.target.value)} 
+                  placeholder="Enter phone number" 
+                  className="input-field" 
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Password
+                </label>
+                <input 
+                  type="password"
+                  value={password} 
+                  onChange={(e) => setPassword(e.target.value)} 
+                  placeholder="Enter password" 
+                  className="input-field" 
+                  required 
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Role
+                </label>
+                <select 
+                  value={role} 
+                  onChange={(e) => setRole(e.target.value)} 
+                  className="input-field"
+                >
+                  <option value="EMPLOYEE">Employee</option>
+                  <option value="SUPERVISOR">Supervisor</option>
+                  <option value="ADMIN">Admin</option>
+                </select>
+              </div>
+              
+              {role === 'EMPLOYEE' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Assign Supervisor
+                  </label>
+                  <select 
+                    value={supervisorId} 
+                    onChange={(e) => setSupervisorId(e.target.value)} 
+                    className="input-field"
+                  >
+                    <option value="">Select Supervisor</option>
+                    {supervisors.map((s) => (
+                      <option key={s.id} value={s.id}>
+                        {s.name} ({s.employeeId})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              
+              <div className="flex space-x-3 pt-4">
+                <button 
+                  type="submit" 
+                  disabled={isLoading} 
+                  className="btn-primary flex-1 disabled:opacity-50"
+                >
+                  {isLoading ? 'Creating...' : 'Create User'}
+                </button>
+                <button 
+                  type="button" 
+                  onClick={() => setIsModalOpen(false)} 
+                  className="btn-secondary flex-1"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Assign Supervisor (optional)</label>
-          <select value={supervisorId} onChange={(e) => setSupervisorId(e.target.value)} className="input-field">
-            <option value="">None</option>
-            {supervisors.map((s) => (
-              <option key={s.id} value={s.id}>{s.name} ({s.employeeId})</option>
-            ))}
-          </select>
-        </div>
-        <button type="submit" disabled={isLoading} className="btn-primary w-full">
-          {isLoading ? 'Creating...' : 'Create User'}
-        </button>
-      </form>
-    </div>
+      )}
+    </>
   )
 }

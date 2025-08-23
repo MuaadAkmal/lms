@@ -5,6 +5,8 @@ import { LeaveRequestsTable } from '@/components/leave-requests-table'
 import { DashboardStats } from '@/components/dashboard-stats'
 import { EmployeeManagement } from '@/components/employee-management'
 import { EmployeeSearch } from '@/components/employee-search'
+import { AdminCreateUser } from '@/components/admin-create-user'
+import { ExportReports } from '@/components/export-reports'
 import { assignSupervisor, updateLeaveRequestStatus } from '@/lib/actions'
 
 async function approveRequest(requestId: string) {
@@ -250,65 +252,69 @@ export default async function DashboardPage() {
 
       {/* Admin Section - Employee-Supervisor Assignment (Legacy) */}
       {user.role === 'ADMIN' && (
-        <EmployeeManagement
-          employees={allUsers.filter((u: any) => u.role === 'EMPLOYEE')}
-          supervisors={supervisors}
-        />
+        <>
+          <div className="card">
+            <div className="flex justify-between items-center mb-6">
+              <div className="flex items-center">
+                <svg className="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                </svg>
+                <h2 className="text-lg font-semibold text-gray-900">Admin Quick Actions</h2>
+              </div>
+              <AdminCreateUser supervisors={supervisors} />
+            </div>
+            <p className="text-gray-600 mb-4">
+              Manage users, assign supervisors, and perform administrative tasks.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <h3 className="font-medium text-blue-800 mb-2">User Management</h3>
+                <p className="text-sm text-blue-600 mb-3">Create and manage user accounts</p>
+                <a href="/dashboard/users" className="text-blue-700 hover:text-blue-900 text-sm font-medium">
+                  Go to Users →
+                </a>
+              </div>
+              <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                <h3 className="font-medium text-green-800 mb-2">All Requests</h3>
+                <p className="text-sm text-green-600 mb-3">View and manage all leave requests</p>
+                <a href="/dashboard/all-requests" className="text-green-700 hover:text-green-900 text-sm font-medium">
+                  View All Requests →
+                </a>
+              </div>
+            </div>
+          </div>
+          <EmployeeManagement
+            employees={allUsers.filter((u: any) => u.role === 'EMPLOYEE')}
+            supervisors={supervisors}
+          />
+        </>
       )}
 
       {/* Additional sections for Supervisors and Admins */}
       {(user.role === 'SUPERVISOR' || user.role === 'ADMIN') && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="card">
-            <div className="flex items-center mb-6">
-              <svg className="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <h2 className="text-lg font-semibold text-gray-900">Quick Actions</h2>
-            </div>
-            <div className="space-y-3">
-              <button className="w-full text-left px-4 py-3 bg-green-50 hover:bg-green-100 rounded-lg border border-green-200 transition-colors">
-                <div className="font-medium text-green-800">Approve All Pending</div>
-                <div className="text-sm text-green-600">Bulk approve selected requests</div>
-              </button>
-              <button className="w-full text-left px-4 py-3 bg-blue-50 hover:bg-blue-100 rounded-lg border border-blue-200 transition-colors">
-                <div className="font-medium text-blue-800">Export Reports</div>
-                <div className="text-sm text-blue-600">Download leave reports</div>
-              </button>
-            </div>
+        <div className="card">
+          <div className="flex items-center mb-6">
+            <svg className="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <h2 className="text-lg font-semibold text-gray-900">Quick Actions</h2>
           </div>
-
-          {user.role === 'ADMIN' && (
-            <div className="card">
-              <div className="flex items-center mb-6">
-                <svg className="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <h2 className="text-lg font-semibold text-gray-900">System Stats</h2>
+          <div className="space-y-3">
+            <button className="w-full text-left px-4 py-3 bg-green-50 hover:bg-green-100 rounded-lg border border-green-200 transition-colors">
+              <div className="font-medium text-green-800">Approve All Pending</div>
+              <div className="text-sm text-green-600">Bulk approve selected requests</div>
+            </button>
+            <ExportReports userRole={user.role} />
+            {user.role === 'ADMIN' && (
+              <div className="flex items-center px-4 py-3 bg-purple-50 hover:bg-purple-100 rounded-lg border border-purple-200 transition-colors">
+                <div className="flex-1">
+                  <div className="font-medium text-purple-800">Create New User</div>
+                  <div className="text-sm text-purple-600">Add employees, supervisors, or admins</div>
+                </div>
+                <AdminCreateUser supervisors={supervisors} />
               </div>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center py-2">
-                  <span className="text-gray-600">Total Users:</span>
-                  <span className="font-semibold">{allUsers.length}</span>
-                </div>
-                <div className="flex justify-between items-center py-2">
-                  <span className="text-gray-600">Employees:</span>
-                  <span className="font-semibold">{allUsers.filter((u: any) => u.role === 'EMPLOYEE').length}</span>
-                </div>
-                <div className="flex justify-between items-center py-2">
-                  <span className="text-gray-600">Supervisors:</span>
-                  <span className="font-semibold">{supervisors.length}</span>
-                </div>
-                <div className="flex justify-between items-center py-2">
-                  <span className="text-gray-600">Unassigned Employees:</span>
-                  <span className="font-semibold text-red-600">
-                    {allUsers.filter((u: any) => u.role === 'EMPLOYEE' && !u.supervisorId).length}
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       )}
     </div>

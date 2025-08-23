@@ -1,20 +1,20 @@
-import { authMiddleware } from "@clerk/nextjs"
+import { auth } from '@/auth'
 
-export default authMiddleware({
-  publicRoutes: ["/"],
-  afterAuth(auth, req, evt) {
-    // If user is signed in and trying to access onboarding, allow it
-    if (auth.userId && req.nextUrl.pathname === "/onboarding") {
-      return
-    }
+export default auth((req) => {
+  const { auth: session } = req
+  const isLoggedIn = !!session?.user
+  const isOnPublicPage = req.nextUrl.pathname === '/'
+  const isOnSignIn = req.nextUrl.pathname === '/sign-in'
 
-    // If user is signed in and trying to access public routes, redirect to dashboard
-    if (auth.userId && req.nextUrl.pathname === "/") {
-      return Response.redirect(new URL("/dashboard", req.url))
-    }
-  },
+  if (isOnPublicPage && isLoggedIn) {
+    return Response.redirect(new URL('/dashboard', req.nextUrl))
+  }
+
+  if (!isLoggedIn && !isOnPublicPage && !isOnSignIn) {
+    return Response.redirect(new URL('/sign-in', req.nextUrl))
+  }
 })
 
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 }

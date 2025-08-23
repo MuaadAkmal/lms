@@ -1,11 +1,29 @@
-import { UserButton } from '@clerk/nextjs'
 import { getCurrentUser } from '@/lib/auth'
+import { signOut } from '@/auth'
 import Link from 'next/link'
 import Image from 'next/image'
 import { redirect } from 'next/navigation'
 
 interface DashboardLayoutProps {
   children: React.ReactNode
+}
+
+async function SignOutButton() {
+  return (
+    <form
+      action={async () => {
+        'use server'
+        await signOut({ redirectTo: '/sign-in' })
+      }}
+    >
+      <button
+        type="submit"
+        className="inline-flex items-center px-3 py-2 text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
+      >
+        Sign Out
+      </button>
+    </form>
+  )
 }
 
 export default async function DashboardLayout({ children }: DashboardLayoutProps) {
@@ -40,12 +58,10 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
               <span className="hidden sm:block text-sm text-primary-600">
                 Welcome, {user.name} ({user.role})
               </span>
-              <UserButton afterSignOutUrl="/sign-in" />
+              <SignOutButton />
             </div>
           </div>
         </div>
-
-
       </header>
 
       {/* Main Content - Full Width */}

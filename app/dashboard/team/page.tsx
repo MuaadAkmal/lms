@@ -2,6 +2,7 @@ import { requireRole } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { LeaveRequestsTable } from '@/components/leave-requests-table'
 import { SearchAndFilter } from '@/components/search-and-filter'
+import { ExportReports } from '@/components/export-reports'
 
 interface TeamPageProps {
   searchParams: {
@@ -11,7 +12,7 @@ interface TeamPageProps {
 }
 
 export default async function TeamPage({ searchParams }: TeamPageProps) {
-  const user = await requireRole(['supervisor', 'admin'])
+  const user = await requireRole(['SUPERVISOR', 'ADMIN'])
 
   // Build where clause for filtering
   const whereClause: any = {
@@ -64,6 +65,17 @@ export default async function TeamPage({ searchParams }: TeamPageProps) {
 
       {/* Search and Filter */}
       <SearchAndFilter />
+
+      {/* Export Reports */}
+      <div className="card">
+        <div className="flex items-center mb-4">
+          <svg className="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <h2 className="text-lg font-semibold text-gray-900">Export Team Reports</h2>
+        </div>
+        <ExportReports userRole="SUPERVISOR" />
+      </div>
 
       <div className="card">
         <LeaveRequestsTable
