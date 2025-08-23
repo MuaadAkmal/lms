@@ -15,7 +15,7 @@ export default function ForgotPasswordPage() {
 
   const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!employeeId || !oldPassword || !newPassword || !confirmPassword) {
       setError('Please fill in all fields.')
       return
@@ -44,10 +44,10 @@ export default function ForgotPasswordPage() {
       const response = await fetch('/api/auth/change-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           employeeId: employeeId.trim(),
           oldPassword,
-          newPassword 
+          newPassword
         }),
       })
 

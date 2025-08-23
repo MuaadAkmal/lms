@@ -76,81 +76,81 @@ export function AdminCreateUser({ supervisors }: { supervisors: any[] }) {
                 </svg>
               </button>
             </div>
-            
+
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Full Name
                 </label>
-                <input 
-                  value={name} 
-                  onChange={(e) => setName(e.target.value)} 
-                  placeholder="Enter full name" 
-                  className="input-field" 
-                  required 
+                <input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Enter full name"
+                  className="input-field"
+                  required
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Employee ID
                 </label>
-                <input 
-                  value={employeeId} 
-                  onChange={(e) => setEmployeeId(e.target.value)} 
-                  placeholder="e.g., EMP001" 
-                  className="input-field" 
-                  required 
+                <input
+                  value={employeeId}
+                  onChange={(e) => setEmployeeId(e.target.value)}
+                  placeholder="e.g., EMP001"
+                  className="input-field"
+                  required
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Email
                 </label>
-                <input 
+                <input
                   type="email"
-                  value={email} 
-                  onChange={(e) => setEmail(e.target.value)} 
-                  placeholder="Enter email address" 
-                  className="input-field" 
-                  required 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter email address"
+                  className="input-field"
+                  required
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Phone (Optional)
                 </label>
-                <input 
-                  value={phone} 
-                  onChange={(e) => setPhone(e.target.value)} 
-                  placeholder="Enter phone number" 
-                  className="input-field" 
+                <input
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="Enter phone number"
+                  className="input-field"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Password
                 </label>
-                <input 
+                <input
                   type="password"
-                  value={password} 
-                  onChange={(e) => setPassword(e.target.value)} 
-                  placeholder="Enter password" 
-                  className="input-field" 
-                  required 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter password"
+                  className="input-field"
+                  required
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Role
                 </label>
-                <select 
-                  value={role} 
-                  onChange={(e) => setRole(e.target.value)} 
+                <select
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
                   className="input-field"
                 >
                   <option value="EMPLOYEE">Employee</option>
@@ -158,15 +158,15 @@ export function AdminCreateUser({ supervisors }: { supervisors: any[] }) {
                   <option value="ADMIN">Admin</option>
                 </select>
               </div>
-              
+
               {role === 'EMPLOYEE' && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Assign Supervisor
                   </label>
-                  <select 
-                    value={supervisorId} 
-                    onChange={(e) => setSupervisorId(e.target.value)} 
+                  <select
+                    value={supervisorId}
+                    onChange={(e) => setSupervisorId(e.target.value)}
                     className="input-field"
                   >
                     <option value="">Select Supervisor</option>
@@ -178,18 +178,18 @@ export function AdminCreateUser({ supervisors }: { supervisors: any[] }) {
                   </select>
                 </div>
               )}
-              
+
               <div className="flex space-x-3 pt-4">
-                <button 
-                  type="submit" 
-                  disabled={isLoading} 
+                <button
+                  type="submit"
+                  disabled={isLoading}
                   className="btn-primary flex-1 disabled:opacity-50"
                 >
                   {isLoading ? 'Creating...' : 'Create User'}
                 </button>
-                <button 
-                  type="button" 
-                  onClick={() => setIsModalOpen(false)} 
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
                   className="btn-secondary flex-1"
                 >
                   Cancel

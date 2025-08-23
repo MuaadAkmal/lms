@@ -1,13 +1,13 @@
-import { auth } from '@/auth'
-import { redirect } from 'next/navigation'
-import { prisma } from '@/lib/prisma'
-import type { Role } from '@prisma/client'
+import { auth } from "@/auth"
+import { redirect } from "next/navigation"
+import { prisma } from "@/lib/prisma"
+import type { Role } from "@prisma/client"
 
 export async function getCurrentUser() {
   const session = await auth()
-  
+
   if (!session?.user?.id) {
-    redirect('/sign-in')
+    redirect("/sign-in")
   }
 
   const user = await prisma.user.findUnique({
@@ -15,7 +15,7 @@ export async function getCurrentUser() {
   })
 
   if (!user) {
-    redirect('/sign-in')
+    redirect("/sign-in")
   }
 
   return user
@@ -30,7 +30,7 @@ export async function requireRole(allowedRoles: Role[]) {
   const user = await getCurrentUser()
 
   if (!allowedRoles.includes(user.role)) {
-    redirect('/dashboard')
+    redirect("/dashboard")
   }
 
   return user

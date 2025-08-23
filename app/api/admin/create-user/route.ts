@@ -6,8 +6,8 @@ import bcrypt from "bcryptjs"
 export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser()
-    
-    if (!user || user.role !== 'ADMIN') {
+
+    if (!user || user.role !== "ADMIN") {
       return NextResponse.json(
         { error: "Unauthorized. Only administrators can create users." },
         { status: 403 }
@@ -15,13 +15,29 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { name, employeeId, email, phone, password, role, supervisorId, customPassword, temporaryPassword } = body
+    const {
+      name,
+      employeeId,
+      email,
+      phone,
+      password,
+      role,
+      supervisorId,
+      customPassword,
+      temporaryPassword,
+    } = body
 
     // Support both customPassword and temporaryPassword parameters for backward compatibility
     const userPassword = customPassword || temporaryPassword || password
 
     // Validate required fields
-    if (!name?.trim() || !employeeId?.trim() || !email?.trim() || !userPassword?.trim() || !role?.trim()) {
+    if (
+      !name?.trim() ||
+      !employeeId?.trim() ||
+      !email?.trim() ||
+      !userPassword?.trim() ||
+      !role?.trim()
+    ) {
       return NextResponse.json(
         { error: "Name, Employee ID, Email, Password, and Role are required." },
         { status: 400 }
@@ -78,7 +94,10 @@ export async function POST(request: NextRequest) {
 
       if (!supervisor) {
         return NextResponse.json(
-          { error: "Invalid supervisor selected. Please choose a valid supervisor." },
+          {
+            error:
+              "Invalid supervisor selected. Please choose a valid supervisor.",
+          },
           { status: 400 }
         )
       }
@@ -116,8 +135,8 @@ export async function POST(request: NextRequest) {
           name: newUser.name,
           employeeId: newUser.employeeId,
           email: newUser.email,
-          role: newUser.role
-        }
+          role: newUser.role,
+        },
       })
     } catch (prismaError: any) {
       console.error("Prisma error during user creation:", prismaError)
@@ -150,7 +169,6 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       )
     }
-
   } catch (error: any) {
     console.error("Error in /api/admin/create-user:", error)
 
@@ -170,7 +188,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const message = error?.message || "An unexpected error occurred while creating the user."
+    const message =
+      error?.message || "An unexpected error occurred while creating the user."
     return NextResponse.json({ error: message }, { status: 500 })
   }
 }

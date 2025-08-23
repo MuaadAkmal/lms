@@ -27,7 +27,7 @@ export function UsersTable({ users, onUserUpdate }: UsersTableProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [roleFilter, setRoleFilter] = useState('all')
   const [isResetting, setIsResetting] = useState<string | null>(null)
-  const [resetResult, setResetResult] = useState<{userId: string, password: string} | null>(null)
+  const [resetResult, setResetResult] = useState<{ userId: string, password: string } | null>(null)
 
   const filteredUsers = users.filter(user => {
     const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

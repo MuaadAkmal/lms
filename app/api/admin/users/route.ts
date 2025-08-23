@@ -1,23 +1,31 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { getCurrentUser } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
-import bcrypt from 'bcryptjs'
+import { NextRequest, NextResponse } from "next/server"
+import { getCurrentUser } from "@/lib/auth"
+import { prisma } from "@/lib/prisma"
+import bcrypt from "bcryptjs"
 
 export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser()
 
-    if (user.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+    if (user.role !== "ADMIN") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
     }
 
-    const { name, employeeId, email, role, supervisorId, temporaryPassword, customPassword } = await request.json()
+    const {
+      name,
+      employeeId,
+      email,
+      role,
+      supervisorId,
+      temporaryPassword,
+      customPassword,
+    } = await request.json()
 
     const password = customPassword || temporaryPassword
 
     if (!name || !employeeId || !email || !password) {
       return NextResponse.json(
-        { error: 'Name, employee ID, email, and password are required' },
+        { error: "Name, employee ID, email, and password are required" },
         { status: 400 }
       )
     }
@@ -25,16 +33,13 @@ export async function POST(request: NextRequest) {
     // Check if employee ID or email already exists
     const existingUser = await prisma.user.findFirst({
       where: {
-        OR: [
-          { employeeId },
-          { email }
-        ]
-      }
+        OR: [{ employeeId }, { email }],
+      },
     })
 
     if (existingUser) {
       return NextResponse.json(
-        { error: 'Employee ID or email already exists' },
+        { error: "Employee ID or email already exists" },
         { status: 400 }
       )
     }
@@ -49,17 +54,17 @@ export async function POST(request: NextRequest) {
         employeeId,
         email,
         password: hashedPassword,
-        role: role as 'EMPLOYEE' | 'SUPERVISOR' | 'ADMIN',
+        role: role as "EMPLOYEE" | "SUPERVISOR" | "ADMIN",
         supervisorId: supervisorId || null,
       },
       include: {
         supervisor: {
           select: {
             name: true,
-            employeeId: true
-          }
-        }
-      }
+            employeeId: true,
+          },
+        },
+      },
     })
 
     return NextResponse.json({
@@ -70,13 +75,13 @@ export async function POST(request: NextRequest) {
         employeeId: newUser.employeeId,
         email: newUser.email,
         role: newUser.role,
-        supervisor: newUser.supervisor
-      }
+        supervisor: newUser.supervisor,
+      },
     })
   } catch (error) {
-    console.error('Error creating user:', error)
+    console.error("Error creating user:", error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: "Internal server error" },
       { status: 500 }
     )
   }

@@ -170,11 +170,10 @@ export function AdminUserManagement({ users, supervisors }: AdminUserManagementP
                   <td className="table-cell">{user.employeeId}</td>
                   <td className="table-cell">{user.email}</td>
                   <td className="table-cell">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      user.role === 'ADMIN' ? 'bg-purple-100 text-purple-800' :
-                      user.role === 'SUPERVISOR' ? 'bg-blue-100 text-blue-800' :
-                      'bg-green-100 text-green-800'
-                    }`}>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${user.role === 'ADMIN' ? 'bg-purple-100 text-purple-800' :
+                        user.role === 'SUPERVISOR' ? 'bg-blue-100 text-blue-800' :
+                          'bg-green-100 text-green-800'
+                      }`}>
                       {user.role}
                     </span>
                   </td>
@@ -230,7 +229,7 @@ export function AdminUserManagement({ users, supervisors }: AdminUserManagementP
                   required
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Employee ID
@@ -243,7 +242,7 @@ export function AdminUserManagement({ users, supervisors }: AdminUserManagementP
                   required
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Email
@@ -256,7 +255,7 @@ export function AdminUserManagement({ users, supervisors }: AdminUserManagementP
                   required
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Role
@@ -271,7 +270,7 @@ export function AdminUserManagement({ users, supervisors }: AdminUserManagementP
                   <option value="ADMIN">Admin</option>
                 </select>
               </div>
-              
+
               {newUser.role === 'EMPLOYEE' && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -291,7 +290,7 @@ export function AdminUserManagement({ users, supervisors }: AdminUserManagementP
                   </select>
                 </div>
               )}
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Custom Password
@@ -306,7 +305,7 @@ export function AdminUserManagement({ users, supervisors }: AdminUserManagementP
                 />
                 <p className="text-xs text-gray-500 mt-1">This password will be used by the user to log in</p>
               </div>
-              
+
               <div className="flex space-x-3">
                 <button
                   type="submit"

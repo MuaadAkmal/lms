@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { getCurrentUser } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { NextRequest, NextResponse } from "next/server"
+import { getCurrentUser } from "@/lib/auth"
+import { prisma } from "@/lib/prisma"
 
 export async function DELETE(
   request: NextRequest,
@@ -9,8 +9,8 @@ export async function DELETE(
   try {
     const user = await getCurrentUser()
 
-    if (user.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+    if (user.role !== "ADMIN") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
     }
 
     const { id } = params
@@ -18,33 +18,30 @@ export async function DELETE(
     // Prevent admin from deleting themselves
     if (id === user.id) {
       return NextResponse.json(
-        { error: 'You cannot delete your own account' },
+        { error: "You cannot delete your own account" },
         { status: 400 }
       )
     }
 
     // Check if user exists
     const userToDelete = await prisma.user.findUnique({
-      where: { id }
+      where: { id },
     })
 
     if (!userToDelete) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: "User not found" }, { status: 404 })
     }
 
     // Delete the user
     await prisma.user.delete({
-      where: { id }
+      where: { id },
     })
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Error deleting user:', error)
+    console.error("Error deleting user:", error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: "Internal server error" },
       { status: 500 }
     )
   }

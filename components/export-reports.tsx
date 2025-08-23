@@ -27,7 +27,7 @@ export function ExportReports({ userRole }: ExportReportsProps) {
       })
 
       const response = await fetch(`/api/reports/export?${params}`)
-      
+
       if (!response.ok) {
         const error = await response.json()
         throw new Error(error.error || 'Export failed')
@@ -65,7 +65,7 @@ export function ExportReports({ userRole }: ExportReportsProps) {
 
   return (
     <>
-      <button 
+      <button
         onClick={() => setIsModalOpen(true)}
         className="w-full text-left px-4 py-3 bg-blue-50 hover:bg-blue-100 rounded-lg border border-blue-200 transition-colors"
       >
@@ -78,7 +78,7 @@ export function ExportReports({ userRole }: ExportReportsProps) {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-full max-w-md">
             <h3 className="text-lg font-semibold mb-4">Export Reports</h3>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -144,10 +144,10 @@ export function ExportReports({ userRole }: ExportReportsProps) {
                     <div className="flex space-x-2 mt-1">
                       <button
                         type="button"
-                        onClick={() => setExportOptions({ 
-                          ...exportOptions, 
-                          startDate: thirtyDaysAgo, 
-                          endDate: today 
+                        onClick={() => setExportOptions({
+                          ...exportOptions,
+                          startDate: thirtyDaysAgo,
+                          endDate: today
                         })}
                         className="text-blue-600 hover:text-blue-800 underline"
                       >
@@ -155,10 +155,10 @@ export function ExportReports({ userRole }: ExportReportsProps) {
                       </button>
                       <button
                         type="button"
-                        onClick={() => setExportOptions({ 
-                          ...exportOptions, 
-                          startDate: '', 
-                          endDate: '' 
+                        onClick={() => setExportOptions({
+                          ...exportOptions,
+                          startDate: '',
+                          endDate: ''
                         })}
                         className="text-blue-600 hover:text-blue-800 underline"
                       >
