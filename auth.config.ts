@@ -20,27 +20,35 @@ export const authConfig = {
       }
       return true
     },
-    jwt({ token, user }) {
+    jwt({ token, user }: any) {
       if (user) {
-        token.role = (user as any).role
-        token.employeeId = (user as any).employeeId
+        token.role = user.role
+        token.employeeId = user.employeeId
+        token.supervisorId = user.supervisorId
       }
       return token
     },
-    session({ session, token }) {
+    session({ session, token }: any) {
       if (token) {
         session.user.id = token.sub!
-        ;(session.user as any).role = token.role
-        ;(session.user as any).employeeId = token.employeeId
+        session.user.role = token.role
+        session.user.employeeId = token.employeeId
+        session.user.supervisorId = token.supervisorId
       }
       return session
     },
   },
   providers: [
     Credentials({
+      name: "credentials",
+      credentials: {
+        employeeId: { label: "Employee ID", type: "text" },
+        password: { label: "Password", type: "password" }
+      },
       async authorize(credentials) {
         try {
           if (!credentials?.employeeId || !credentials?.password) {
+            console.log("Missing credentials")
             return null
           }
 
@@ -51,6 +59,7 @@ export const authConfig = {
           })
 
           if (!user) {
+            console.log("User not found")
             return null
           }
 
@@ -63,8 +72,11 @@ export const authConfig = {
           )
 
           if (!passwordsMatch) {
+            console.log("Password mismatch")
             return null
           }
+
+          console.log("User authenticated successfully:", user.employeeId)
 
           return {
             id: user.id,
@@ -72,6 +84,7 @@ export const authConfig = {
             email: user.email,
             role: user.role,
             employeeId: user.employeeId,
+            supervisorId: user.supervisorId,
           }
         } catch (error) {
           console.error("Auth error:", error)
