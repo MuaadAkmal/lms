@@ -36,7 +36,10 @@ export async function POST(request: NextRequest) {
     const userWithPassword = user as any
 
     // Verify the old password
-    const isOldPasswordValid = await bcrypt.compare(oldPassword, userWithPassword.password)
+    const isOldPasswordValid = await bcrypt.compare(
+      oldPassword,
+      userWithPassword.password
+    )
 
     if (!isOldPasswordValid) {
       return NextResponse.json(
@@ -46,7 +49,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if new password is different from old password
-    const isSamePassword = await bcrypt.compare(newPassword, userWithPassword.password)
+    const isSamePassword = await bcrypt.compare(
+      newPassword,
+      userWithPassword.password
+    )
 
     if (isSamePassword) {
       return NextResponse.json(

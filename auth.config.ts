@@ -74,7 +74,7 @@ export const authConfig = {
             employeeId: user.employeeId,
           }
         } catch (error) {
-          console.error('Auth error:', error)
+          console.error("Auth error:", error)
           return null
         }
       },
