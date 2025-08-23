@@ -24,7 +24,7 @@ export const authConfig = {
       if (user) {
         token.role = user.role
         token.employeeId = user.employeeId
-        token.supervisorId = user.supervisorId
+        token.supervisorId = user.supervisorId || null
       }
       return token
     },
@@ -78,14 +78,15 @@ export const authConfig = {
 
           console.log("User authenticated successfully:", user.employeeId)
 
+          // Return user object that matches NextAuth User type
           return {
             id: user.id,
             name: user.name,
             email: user.email,
             role: user.role,
             employeeId: user.employeeId,
-            supervisorId: user.supervisorId,
-          }
+            supervisorId: user.supervisorId ?? undefined,
+          } as any
         } catch (error) {
           console.error("Auth error:", error)
           return null
