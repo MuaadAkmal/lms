@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
 
     if (type === 'leave-requests') {
       // Build filter based on user role
-      let whereClause: any = user.role === 'ADMIN' 
+      const whereClause: any = user.role === 'ADMIN' 
         ? {} 
         : { user: { supervisorId: user.id } }
 
