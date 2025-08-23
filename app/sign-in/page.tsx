@@ -3,17 +3,20 @@
 import { useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import Image from 'next/image'
 
 export default function SignInPage() {
   const [employeeId, setEmployeeId] = useState('')
   const [password, setPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+  const [isChangePasswordMode, setIsChangePasswordMode] = useState(false)
   const router = useRouter()
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!employeeId.trim() || !password.trim()) {
       setError('Please enter both employee ID and password.')
@@ -43,6 +46,72 @@ export default function SignInPage() {
     }
   }
 
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (!employeeId || !password || !newPassword || !confirmPassword) {
+      setError('Please fill in all fields.')
+      return
+    }
+
+    if (newPassword !== confirmPassword) {
+      setError('New passwords do not match.')
+      return
+    }
+
+    if (newPassword.length < 6) {
+      setError('New password must be at least 6 characters long.')
+      return
+    }
+
+    if (password === newPassword) {
+      setError('New password must be different from current password.')
+      return
+    }
+
+    setIsLoading(true)
+    setError('')
+    setSuccess('')
+
+    try {
+      const response = await fetch('/api/auth/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          employeeId: employeeId.trim(),
+          oldPassword: password,
+          newPassword 
+        }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setSuccess('Password changed successfully! You can now sign in with your new password.')
+        // Clear form and switch back to sign-in mode
+        setPassword('')
+        setNewPassword('')
+        setConfirmPassword('')
+        setIsChangePasswordMode(false)
+      } else {
+        setError(data.error || 'Failed to change password.')
+      }
+    } catch (error) {
+      setError('An error occurred. Please try again.')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const switchMode = () => {
+    setIsChangePasswordMode(!isChangePasswordMode)
+    setError('')
+    setSuccess('')
+    setPassword('')
+    setNewPassword('')
+    setConfirmPassword('')
+  }
+
   return (
     <div className="min-h-screen bg-white flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
@@ -58,17 +127,26 @@ export default function SignInPage() {
             />
           </div>
           <h2 className="text-3xl font-bold text-primary-950 mb-2">
-            Sign in to your account
+            {isChangePasswordMode ? 'Change your password' : 'Sign in to your account'}
           </h2>
           <p className="text-primary-600">
-            Welcome back to Leave Management System
+            {isChangePasswordMode 
+              ? 'Enter your current password and set a new one'
+              : 'Welcome back to Leave Management System'
+            }
           </p>
         </div>
         <div className="card">
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={isChangePasswordMode ? handleChangePassword : handleSignIn} className="space-y-4">
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
                 {error}
+              </div>
+            )}
+
+            {success && (
+              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded">
+                {success}
               </div>
             )}
 
@@ -89,7 +167,7 @@ export default function SignInPage() {
 
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-primary-700 mb-1">
-                Password
+                {isChangePasswordMode ? 'Current Password' : 'Password'}
               </label>
               <input
                 type="password"
@@ -97,24 +175,67 @@ export default function SignInPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="input-field"
+                placeholder={isChangePasswordMode ? 'Enter your current password' : 'Enter your password'}
                 required
               />
             </div>
 
-            <div className="flex items-center justify-between">
-              <Link href="/forgot-password" className="text-sm text-primary-600 hover:text-primary-800">
-                Forgot your password?
-              </Link>
-            </div>
+            {isChangePasswordMode && (
+              <>
+                <div>
+                  <label htmlFor="newPassword" className="block text-sm font-medium text-primary-700 mb-1">
+                    New Password
+                  </label>
+                  <input
+                    type="password"
+                    id="newPassword"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    className="input-field"
+                    placeholder="Enter new password (min 6 characters)"
+                    required
+                    minLength={6}
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="confirmPassword" className="block text-sm font-medium text-primary-700 mb-1">
+                    Confirm New Password
+                  </label>
+                  <input
+                    type="password"
+                    id="confirmPassword"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="input-field"
+                    placeholder="Confirm new password"
+                    required
+                    minLength={6}
+                  />
+                </div>
+              </>
+            )}
 
             <button
               type="submit"
               disabled={isLoading}
               className="btn-primary w-full disabled:opacity-50"
             >
-              {isLoading ? 'Signing in...' : 'Sign In'}
+              {isLoading 
+                ? (isChangePasswordMode ? 'Changing Password...' : 'Signing in...') 
+                : (isChangePasswordMode ? 'Change Password' : 'Sign In')
+              }
             </button>
           </form>
+
+          <div className="mt-6 text-center">
+            <button 
+              onClick={switchMode}
+              className="text-sm text-primary-600 hover:text-primary-800 underline"
+            >
+              {isChangePasswordMode ? 'Back to sign in' : 'Forgot your password?'}
+            </button>
+          </div>
         </div>
       </div>
     </div>
