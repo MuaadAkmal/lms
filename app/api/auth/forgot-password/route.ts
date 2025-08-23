@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import bcrypt from 'bcryptjs'
 
 export async function POST(request: NextRequest) {
   try {
-    const { employeeId } = await request.json()
+    const { employeeId, action, newPassword } = await request.json()
 
     if (!employeeId) {
       return NextResponse.json(
@@ -24,11 +25,37 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // In a real application, you would send an email to the admin or user
-    // For now, we'll just return a success message
+    // If this is a password reset action with a new password
+    if (action === 'reset' && newPassword) {
+      if (newPassword.length < 6) {
+        return NextResponse.json(
+          { error: 'Password must be at least 6 characters long' },
+          { status: 400 }
+        )
+      }
+
+      const hashedPassword = await bcrypt.hash(newPassword, 12)
+      
+      await prisma.user.update({
+        where: { employeeId: employeeId.trim() },
+        data: { password: hashedPassword }
+      })
+
+      return NextResponse.json({
+        success: true,
+        message: 'Password has been reset successfully. You can now sign in with your new password.'
+      })
+    }
+
+    // Default action - just acknowledge the request
     return NextResponse.json({
       success: true,
-      message: 'Password reset request submitted. Please contact your administrator.'
+      message: 'Password reset request submitted. Please contact your administrator for further assistance.',
+      userInfo: {
+        name: user.name,
+        email: user.email,
+        employeeId: user.employeeId
+      }
     })
   } catch (error) {
     console.error('Error in forgot password:', error)

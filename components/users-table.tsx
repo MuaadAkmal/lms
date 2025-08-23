@@ -20,11 +20,14 @@ interface User {
 
 interface UsersTableProps {
   users: User[]
+  onUserUpdate?: () => void
 }
 
-export function UsersTable({ users }: UsersTableProps) {
+export function UsersTable({ users, onUserUpdate }: UsersTableProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [roleFilter, setRoleFilter] = useState('all')
+  const [isResetting, setIsResetting] = useState<string | null>(null)
+  const [resetResult, setResetResult] = useState<{userId: string, password: string} | null>(null)
 
   const filteredUsers = users.filter(user => {
     const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -50,8 +53,68 @@ export function UsersTable({ users }: UsersTableProps) {
     }
   }
 
+  const handleResetPassword = async (userId: string) => {
+    setIsResetting(userId)
+    try {
+      const response = await fetch(`/api/admin/users/${userId}/reset-password`, {
+        method: 'POST'
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setResetResult({ userId, password: data.temporaryPassword })
+        if (onUserUpdate) onUserUpdate()
+      } else {
+        alert('Failed to reset password')
+      }
+    } catch (error) {
+      console.error('Error resetting password:', error)
+      alert('An error occurred while resetting password')
+    } finally {
+      setIsResetting(null)
+    }
+  }
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text)
+    alert('Password copied to clipboard!')
+  }
+
   return (
     <div className="space-y-4">
+      {/* Password Reset Result Modal */}
+      {resetResult && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 className="text-lg font-semibold mb-4">Password Reset Successful</h3>
+            <p className="mb-4">
+              New temporary password for{' '}
+              <strong>{users.find(u => u.id === resetResult.userId)?.name}</strong>:
+            </p>
+            <div className="bg-gray-100 p-3 rounded border flex items-center justify-between">
+              <code className="font-mono text-sm">{resetResult.password}</code>
+              <button
+                onClick={() => copyToClipboard(resetResult.password)}
+                className="ml-2 btn-secondary text-xs py-1 px-2"
+              >
+                Copy
+              </button>
+            </div>
+            <p className="text-sm text-gray-600 mt-2">
+              Please share this password securely with the user. They can change it after signing in.
+            </p>
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={() => setResetResult(null)}
+                className="btn-primary"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Search and Filter */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
@@ -122,8 +185,12 @@ export function UsersTable({ users }: UsersTableProps) {
                     <button className="btn-secondary text-xs py-1 px-2">
                       Edit
                     </button>
-                    <button className="btn-secondary text-xs py-1 px-2">
-                      View
+                    <button
+                      onClick={() => handleResetPassword(user.id)}
+                      disabled={isResetting === user.id}
+                      className="btn-danger text-xs py-1 px-2 disabled:opacity-50"
+                    >
+                      {isResetting === user.id ? 'Resetting...' : 'Reset Password'}
                     </button>
                   </div>
                 </td>
