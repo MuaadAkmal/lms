@@ -42,13 +42,16 @@ export async function GET(request: NextRequest) {
         include: {
           user: {
             select: {
-              name: true,
+              firstName: true,
+              middleName: true,
+              lastName: true,
               employeeId: true,
               email: true,
               role: true,
               supervisor: {
                 select: {
-                  name: true,
+                  firstName: true,
+                  lastName: true,
                   employeeId: true,
                 },
               },
@@ -60,11 +63,11 @@ export async function GET(request: NextRequest) {
 
       data = leaveRequests.map((request) => ({
         "Request ID": request.id,
-        "Employee Name": request.user.name,
+        "Employee Name": `${request.user.firstName} ${request.user.middleName ? request.user.middleName + ' ' : ''}${request.user.lastName}`.trim(),
         "Employee ID": request.user.employeeId,
         Email: request.user.email,
         Role: request.user.role,
-        Supervisor: request.user.supervisor?.name || "N/A",
+        Supervisor: request.user.supervisor ? `${request.user.supervisor.firstName} ${request.user.supervisor.lastName}`.trim() : "N/A",
         "Start Date": request.startDate.toISOString().split("T")[0],
         "End Date": request.endDate.toISOString().split("T")[0],
         Reason: request.reason,
@@ -83,7 +86,8 @@ export async function GET(request: NextRequest) {
         include: {
           supervisor: {
             select: {
-              name: true,
+              firstName: true,
+              lastName: true,
               employeeId: true,
             },
           },
@@ -99,12 +103,12 @@ export async function GET(request: NextRequest) {
 
       data = users.map((user) => ({
         "User ID": user.id,
-        Name: user.name,
+        Name: `${user.firstName} ${user.middleName ? user.middleName + ' ' : ''}${user.lastName}`.trim(),
         "Employee ID": user.employeeId,
         Email: user.email,
         Phone: user.phone || "N/A",
         Role: user.role,
-        Supervisor: user.supervisor?.name || "N/A",
+        Supervisor: user.supervisor ? `${user.supervisor.firstName} ${user.supervisor.lastName}`.trim() : "N/A",
         "Total Leave Requests": user._count.leaveRequests,
         "Employees Under Management": user._count.employees,
         "Created At": user.createdAt.toISOString().split("T")[0],

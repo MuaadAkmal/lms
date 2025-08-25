@@ -23,10 +23,11 @@ export default async function TeamPage({ searchParams }: TeamPageProps) {
 
   // Add search filter
   if (searchParams.search) {
-    whereClause.user.name = {
-      contains: searchParams.search,
-      mode: 'insensitive'
-    }
+    whereClause.user.OR = [
+      { firstName: { contains: searchParams.search, mode: 'insensitive' } },
+      { middleName: { contains: searchParams.search, mode: 'insensitive' } },
+      { lastName: { contains: searchParams.search, mode: 'insensitive' } }
+    ]
   }
 
   // Add status filter
@@ -40,7 +41,9 @@ export default async function TeamPage({ searchParams }: TeamPageProps) {
     include: {
       user: {
         select: {
-          name: true,
+          firstName: true,
+          middleName: true,
+          lastName: true,
           employeeId: true
         }
       }
@@ -51,7 +54,7 @@ export default async function TeamPage({ searchParams }: TeamPageProps) {
   // Get team members for stats
   const teamMembers = await prisma.user.findMany({
     where: { supervisorId: user.id },
-    select: { id: true, name: true, employeeId: true }
+    select: { id: true, firstName: true, middleName: true, lastName: true, employeeId: true }
   })
 
   return (

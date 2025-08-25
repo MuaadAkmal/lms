@@ -56,7 +56,7 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
             </div>
             <div className="flex items-center space-x-4">
               <span className="hidden sm:block text-sm text-primary-600">
-                Welcome, {user.name} ({user.role})
+                Welcome, {`${user.firstName}${user.middleName ? ` ${user.middleName}` : ''} ${user.lastName}`} ({user.role})
               </span>
               <SignOutButton />
             </div>

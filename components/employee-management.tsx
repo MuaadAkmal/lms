@@ -6,13 +6,17 @@ import { assignSupervisor } from '@/lib/actions'
 
 interface User {
   id: string
-  name: string
+  firstName: string
+  middleName?: string | null
+  lastName: string
   employeeId: string
   email: string
   role: string
   supervisorId: string | null
   supervisor?: {
-    name: string
+    firstName: string
+    middleName?: string | null
+    lastName: string
     employeeId: string
   } | null
 }
@@ -62,7 +66,7 @@ export function EmployeeManagement({ employees, supervisors }: EmployeeManagemen
             <tbody className="table-body">
               {employees.map((employee) => (
                 <tr key={employee.id}>
-                  <td className="table-cell">{employee.name}</td>
+                  <td className="table-cell">{[employee.firstName, employee.middleName, employee.lastName].filter(Boolean).join(' ')}</td>
                   <td className="table-cell">{employee.employeeId}</td>
                   <td className="table-cell">
                     <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -72,7 +76,7 @@ export function EmployeeManagement({ employees, supervisors }: EmployeeManagemen
                   <td className="table-cell">
                     {employee.supervisor ? (
                       <span className="text-gray-900">
-                        {employee.supervisor.name} ({employee.supervisor.employeeId})
+                        {[employee.supervisor?.firstName, employee.supervisor?.middleName, employee.supervisor?.lastName].filter(Boolean).join(' ')} ({employee.supervisor?.employeeId})
                       </span>
                     ) : (
                       <span className="text-red-500 italic">No supervisor assigned</span>
@@ -88,7 +92,7 @@ export function EmployeeManagement({ employees, supervisors }: EmployeeManagemen
                       <option value="">Select Supervisor</option>
                       {supervisors.map((supervisor) => (
                         <option key={supervisor.id} value={supervisor.id}>
-                          {supervisor.name} ({supervisor.employeeId})
+                          {[supervisor.firstName, supervisor.middleName, supervisor.lastName].filter(Boolean).join(' ')} ({supervisor.employeeId})
                         </option>
                       ))}
                     </select>

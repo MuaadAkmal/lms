@@ -54,7 +54,9 @@ export async function POST(request: NextRequest) {
       message:
         "Password reset request submitted. Please contact your administrator for further assistance.",
       userInfo: {
-        name: user.name,
+        firstName: user.firstName,
+        middleName: user.middleName,
+        lastName: user.lastName,
         email: user.email,
         employeeId: user.employeeId,
       },

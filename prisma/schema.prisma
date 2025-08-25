@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,36 +7,29 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  EMPLOYEE
-  SUPERVISOR
-  ADMIN
-}
-
-enum LeaveStatus {
-  PENDING
-  APPROVED
-  REJECTED
-}
-
 model User {
-  id            String    @id @default(cuid())
-  name          String
-  employeeId    String    @unique
-  email         String    @unique
+  id            String         @id @default(cuid())
+  employeeId    String         @unique
+  firstName     String
+  middleName    String?
+  lastName      String
+  iqamaNo       String?        @unique
+  storeCode     String?
+  nationality   String?
+  gosiType      GosiType?
+  jobTitle      String?
+  email         String         @unique
   phone         String?
   password      String
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  role          Role      @default(EMPLOYEE)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  role          Role           @default(EMPLOYEE)
   supervisorId  String?
-  
-  // Relations
-  supervisor     User?           @relation("UserSupervisor", fields: [supervisorId], references: [id])
-  employees      User[]          @relation("UserSupervisor")
-  leaveRequests  LeaveRequest[]
-  accounts       Account[]
-  sessions       Session[]
+  accounts      Account[]
+  sessions      Session[]
+  leaveRequests LeaveRequest[]
+  supervisor    User?          @relation("UserSupervisor", fields: [supervisorId], references: [id])
+  employees     User[]         @relation("UserSupervisor")
 
   @@map("users")
 }
@@ -48,15 +40,14 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -86,9 +77,24 @@ model LeaveRequest {
   status    LeaveStatus @default(PENDING)
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
-  
-  // Relations
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("leave_requests")
+}
+
+enum Role {
+  EMPLOYEE
+  SUPERVISOR
+  ADMIN
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum GosiType {
+  SAUDI
+  NON_SAUDI
 }

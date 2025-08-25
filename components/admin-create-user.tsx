@@ -5,7 +5,9 @@ import { useRouter } from 'next/navigation'
 
 export function AdminCreateUser({ supervisors }: { supervisors: any[] }) {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [name, setName] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [middleName, setMiddleName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [employeeId, setEmployeeId] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
@@ -22,14 +24,16 @@ export function AdminCreateUser({ supervisors }: { supervisors: any[] }) {
       const res = await fetch('/api/admin/create-user', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, employeeId, email, phone, password, role, supervisorId: supervisorId || null })
+        body: JSON.stringify({ firstName, middleName, lastName, employeeId, email, phone, password, role, supervisorId: supervisorId || null })
       })
       const data = await res.json()
       if (res.ok) {
         alert('User created successfully!')
         router.refresh()
         // clear form
-        setName('')
+        setFirstName('')
+        setMiddleName('')
+        setLastName('')
         setEmployeeId('')
         setEmail('')
         setPhone('')
@@ -79,13 +83,31 @@ export function AdminCreateUser({ supervisors }: { supervisors: any[] }) {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Full Name
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">First Name *</label>
                 <input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Enter full name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  placeholder="Enter first name"
+                  className="input-field"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Middle Name *</label>
+                <input
+                  value={middleName}
+                  onChange={(e) => setMiddleName(e.target.value)}
+                  placeholder="Enter middle name"
+                  className="input-field"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Last Name *</label>
+                <input
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  placeholder="Enter last name"
                   className="input-field"
                   required
                 />
@@ -172,7 +194,7 @@ export function AdminCreateUser({ supervisors }: { supervisors: any[] }) {
                     <option value="">Select Supervisor</option>
                     {supervisors.map((s) => (
                       <option key={s.id} value={s.id}>
-                        {s.name} ({s.employeeId})
+                        {[s.firstName, s.middleName, s.lastName].filter(Boolean).join(' ')} ({s.employeeId})
                       </option>
                     ))}
                   </select>

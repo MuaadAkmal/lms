@@ -10,10 +10,29 @@ export default async function UsersPage() {
 
   // Fetch all users with their supervisor information
   const users = await prisma.user.findMany({
-    include: {
+    select: {
+      id: true,
+      employeeId: true,
+      firstName: true,
+      middleName: true,
+      lastName: true,
+      iqamaNo: true,
+      storeCode: true,
+      nationality: true,
+      gosiType: true,
+      jobTitle: true,
+      email: true,
+      phone: true,
+      password: false,
+      createdAt: true,
+      updatedAt: true,
+      role: true,
+      supervisorId: true,
       supervisor: {
         select: {
-          name: true,
+          firstName: true,
+          middleName: true,
+          lastName: true,
           employeeId: true
         }
       },

@@ -5,13 +5,26 @@ export default auth((req) => {
   const isLoggedIn = !!session?.user
   const isOnPublicPage = req.nextUrl.pathname === "/"
   const isOnSignIn = req.nextUrl.pathname === "/sign-in"
+  const isOnDashboard = req.nextUrl.pathname.startsWith("/dashboard")
 
-  if (isOnPublicPage && isLoggedIn) {
-    return Response.redirect(new URL("/dashboard", req.nextUrl))
+  // Allow access to public pages and sign-in page
+  if (isOnPublicPage || isOnSignIn) {
+    return
   }
 
-  if (!isLoggedIn && !isOnPublicPage && !isOnSignIn) {
+  // Redirect unauthenticated users trying to access protected pages
+  if (!isLoggedIn && isOnDashboard) {
     return Response.redirect(new URL("/sign-in", req.nextUrl))
+  }
+
+  // Allow authenticated users to access dashboard
+  if (isLoggedIn && isOnDashboard) {
+    return
+  }
+
+  // Redirect authenticated users from root to dashboard
+  if (isLoggedIn && isOnPublicPage) {
+    return Response.redirect(new URL("/dashboard", req.nextUrl))
   }
 })
 

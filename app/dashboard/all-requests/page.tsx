@@ -20,10 +20,11 @@ export default async function AllRequestsPage({ searchParams }: AllRequestsPageP
   // Add search filter
   if (searchParams.search) {
     whereClause.user = {
-      name: {
-        contains: searchParams.search,
-        mode: 'insensitive'
-      }
+      OR: [
+        { firstName: { contains: searchParams.search, mode: 'insensitive' } },
+        { middleName: { contains: searchParams.search, mode: 'insensitive' } },
+        { lastName: { contains: searchParams.search, mode: 'insensitive' } }
+      ]
     }
   }
 
@@ -38,7 +39,9 @@ export default async function AllRequestsPage({ searchParams }: AllRequestsPageP
     include: {
       user: {
         select: {
-          name: true,
+          firstName: true,
+          middleName: true,
+          lastName: true,
           employeeId: true
         }
       }
@@ -57,6 +60,15 @@ export default async function AllRequestsPage({ searchParams }: AllRequestsPageP
   const rejectedRequests = await prisma.leaveRequest.count({
     where: { status: 'REJECTED' }
   })
+
+  // Map leaveRequests to add a name property to user
+  const leaveRequestsWithName = leaveRequests.map((req) => ({
+    ...req,
+    user: {
+      ...req.user,
+      name: [req.user.firstName, req.user.middleName, req.user.lastName].filter(Boolean).join(' ').trim(),
+    },
+  }));
 
   return (
     <div className="space-y-6">
@@ -111,7 +123,7 @@ export default async function AllRequestsPage({ searchParams }: AllRequestsPageP
 
       <div className="card">
         <LeaveRequestsTable
-          requests={leaveRequests}
+          requests={leaveRequestsWithName}
           showActions={true}
           showUserInfo={true}
           allowApproval={true}

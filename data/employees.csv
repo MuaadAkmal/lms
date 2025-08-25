@@ -1,0 +1,90 @@
+EMP_id.,Employee Name Arabic,First Name,Middle Name,Last Name,Iqama No./Saudi ID,Status,Grounds for Term. Code,Store Code,Nationality,GOSI Type,Job Title
+1001,عباس   موكيل,ABBAS,,MUKKIL,2259072623,Active,,S0002,الهند               ,Non-Saudi,PERMANENT
+1002,عبدالغفار   كوتاشيري,ABDUL GAFFAR,MOYINKUTTY,KUTTACHERI,2421728987,Inactive,,WHOLESALE,الهند               ,Non-Saudi,PERMANENT
+1003,عبدالغفور مندان  تودي,ABDUL GAFOOR,, MUNDANTHODY,2204356113,Active,,S0001,الهند               ,Non-Saudi,PERMANENT
+1004,عبدالحفيف علي  كوتي,ABDUL HAFEEF  ,, ALIKUTTY,2185514243,Inactive,RESIGNED,COMMON,الهند               ,Non-Saudi,PERMANENT
+1005,عبداللطيف   موسى,ABDUL LATHEEF,ABDUL LATHEEF,MANGALATH MOOSA,2408350896,Active,,S0001,الهند               ,Non-Saudi,PERMANENT
+1006,عبدالمنير   بيلاكال,ABDUL MUNEER,MUHAMMED, MUNDAM PILAKKAL,2291322861,Active,,S0003,الهند               ,Non-Saudi,PERMANENT
+1007,عبدالناصر كاناكا  شيري,ABDUL NASER,,KANAKKASSERI,2271804060,Active,,S0001,الهند               ,Non-Saudi,PERMANENT
+1008,عبدالرحمن فارع مصلح حسن,ABDUL RAHMAN FARIH ,,MUSLIH HASSAN,2054336736,Inactive,RESIGNED,S0001,اليمن               ,Non-Saudi,TEMPORARY
+1009,عبدالرشيد تسولا  مباكال,ABDUL RASHEED,, CHOLAMBIKKAL,2323583241,Inactive,RESIGNED,S0001,الهند               ,Non-Saudi,PERMANENT
+1010,عبدالرشيد   بير كوت,ABDUL RASHEED,,PERKUTH,2203621988,Inactive,,S0001,الهند               ,Non-Saudi,PERMANENT
+1011,عبدالرحمن   رمضان,ABDUL REHMAN,MUHAMMAD,RAMZAN,2400446221,Active,,S0001,باكستان             ,Non-Saudi,PERMANENT
+1012,عبدالشميد   شولكال,ABDUL SHAMEED  CHOLAKKAL,,CHOLAKKAL,2329165944,Inactive,RESIGNED,S0003,الهند               ,Non-Saudi,PERMANENT
+1013,عبدالشكور   عالم,ABDUL SHUKKOOR,,ERIYAKKALAM,2418742603,Active,,S0002,الهند               ,Non-Saudi,PERMANENT
+1014,عبدالبشير   بير كوت,ABDULBASHEER,,UROTHEL,2123910255,Active,,S0001,الهند               ,Non-Saudi,PERMANENT
+1015,عبدالكافي قايد مصلح نهشل,ABDULKAFI,QAED MUSLIH,NAHSHAL,2276051865,Active,,S0001,اليمن               ,Non-Saudi,PERMANENT
+1016,عبد الكريم علي محمد ,ABDULKARIM, ALI MUHAMMED,HUBAISH,2445368117,Active,,S0001,اليمن               ,Non-Saudi,PERMANENT
+1017,عبدالله عبدالرحمن  كودالي,ABDULLA ABDU, RAHIMAN ,KODALI,2256687894,Inactive,RESIGNED,S0002,الهند               ,Non-Saudi,PERMANENT
+1018,عبدالله محمد  سابيو,ABDULLAHI,MOHAMMED ,SABIU,2160037574,Active,,S0001,نيجيريا             ,Non-Saudi,PERMANENT
+1020,عبدالمجيب موندا امبارا كوني,ABDULMUJEEB, MUNDAMBRA , KUNHIMOYIN,2311050518,Active,,S0001,الهند               ,Non-Saudi,PERMANENT
+1021,عبدالمنير   كابات,ABDULMUNIR,, KAPAT,2129532335,Inactive,,S0002,الهند               ,Non-Saudi,PERMANENT
+1022,عبدالسلام   كابات,ABDUSSALAM,,KAPPAT,2169489073,Active,,S0003,الهند               ,Non-Saudi,PERMANENT
+1023,ابو بكر   اكال,ABOOBACKER,EENDEENKUTTY,POTTAMPELAKKAL,2407665716,Active,,S0001,الهند               ,Non-Saudi,PERMANENT
+1024,ابو بكر   مولا بالي,ABOOBACKER ,,MULLAPPALLY,2168413462,Inactive,RESIGNED,S0001,الهند               ,Non-Saudi,PERMANENT
+1025,ابو بكر ببالي,ABOOBAKER,, PAPPALI,2114238096,Active,,WHOLESALE,الهند               ,Non-Saudi,PERMANENT
+1026,عابد حسين شاكر محمد,ABID HUSSAIN,SHAKIR,MUHAMMAD,2420303204,Active,,S0003,باكستان,Non-Saudi,PERMANENT
+1027,ادمو محمد  احمد,ADAMU MOHAMMED,,AHMED,2155248012,Inactive,,WHOLESALE,نيجيريا             ,Non-Saudi,PERMANENT
+1028,احمد كوتي بوتام كوناتيل,AHAMED KUTTY,,POTTAMKONATHIL,2176095285,Active,,S0001,الهند               ,Non-Saudi,PERMANENT
+1029,احمد كبير كوندوكلون,AHAMMED KABEER,,KUNDUKALAVAN,2339355121,Active,,S0001,الهند,Non-Saudi,PERMANENT
+1030,احمد محمد  فيروز,AHMAD MOHAMMEDFEEROZ,, ,2050813456,Active,,WHOLESALE,الهند               ,Non-Saudi,PERMANENT
+1031,احمد عباس قائد البير,AHMED ABBAS,,QAED,2213728385,Inactive,,S0003,اليمن               ,Non-Saudi,PERMANENT
+1032,احمد عبده  شرف,AHMED ABDU ,,SHARAF,2052731250,Inactive,RESIGNED,WHOLESALE,اليمن               ,Non-Saudi,PERMANENT
+1033,اكبر   منكدافان,AKBAR ALI,,MANAKKADAVAN,2193648488,Active,,S0002,الهند               ,Non-Saudi,PERMANENT
+1034,أكرم علي علي قاسم عثمان,AKRAM ALI, ALI KASIM ,USMAN,2377196130,Active,,S0003,اليمن               ,Non-Saudi,PERMANENT
+1035,ال امين انور,AL AMIN MD,ANOWAR,PATWARY,2436099499,Inactive,,S0001,بنجلاديش             ,Non-Saudi,PERMANENT
+1036,المجير   الشيخ,ALAMGIR SEKANDAR,,SHEIKH,2255294189,Active,,S0001,بنجلاديش             ,Non-Saudi,PERMANENT
+1037,الجازي صالح الفهمي,ALGAZIE SALIH ,,ALFAHMI,1058060508,Inactive,RESIGNED,SAUDA,السعودية,Saudi,PERMANENT
+1038,علي محمد صالح الغرابي,ALI MUHAMMED SALIH ALGHURABHI,,ALGHURABHI,2321443554,Active,,S0001,اليمن               ,Non-Saudi,PERMANENT
+1039,الطاف حسين غوبانج,ALTAF HUSSAIN ,GOPANG GHULAM ,HUSSAIN GOPANG,2319284937,Inactive,DISMISSED,S0003,باكستان             ,Non-Saudi,PERMANENT
+1040,امين علي عزي نهشل,AMIN ALI AZI,, NAHSHAL,2236771016,Inactive,,S0001,اليمن               ,Non-Saudi,PERMANENT
+1041,امنة دحفوز جعفري,AMINA DAHFOOS  ,ABDU,JAHFARI,1071065161,Inactive,RESIGNED,SAUDA,السعودية,Saudi,PERMANENT
+1042,عنود تكروني,ANOOD,,TAKRONI,NA,Inactive,RESIGNED,S0001,, ,PERMANENT
+1043,انور حسين ابو سعيد,ANUARHASAEN,,ABASAEAD,2107774495,Active,,S0001,بنجلاديش             ,Non-Saudi,PERMANENT
+1044,انور   نامبي ماداتيل,ANVAR SWADIQUE ,ANVAR SWADIQUE  ,NAMBIMADATHIL,2406855219,Inactive,RESIGNED,S0001,الهند               ,Non-Saudi,TEMPORARY
+1045,انور محمد سعد محمد نهشل,ANWAR MUHAMMED,SAAD MUHAMMED,NAHSHAL,2321534709,Active,,S0003,اليمن               ,Non-Saudi,PERMANENT
+1046,عوفه عياف بن عبدالله الفهمي,AOUFAH AYAF ,,ALFAHMI,1076392883,Inactive,RESIGNED,S0001,السعودية,Saudi,PERMANENT
+1047,اشرف   كوتامال,ASHRAF,,KOTTAMMAL,2168421721,Active,,S0003,الهند               ,Non-Saudi,PERMANENT
+1049,عطيه عطيان عبدالرحمن الفهمي,ATHIYAH,ATYAN,ALFAHMI,1087599617,Active,,S0003,السعودية,Saudi,PERMANENT
+1050,عاطي عطيان عبدالرحمن الفهمي,ATI ATHYAN ,,ALFAHMI,1087665699,Inactive,RESIGNED,SAUDA,السعودية,Saudi,TEMPORARY
+1051,عايضه عواض بن حاسن الدعدى,AYIDHA AVADH,, AL DAHDI,1049150392,Inactive,RESIGNED,SAUDA,السعودية,Saudi,PERMANENT
+1052,ايوب بولاني  كوندان,AYOOB PULLANI,,KUNDAN,2291262703,Active,,WH,الهند               ,Non-Saudi,PERMANENT
+1053,عزيز عبدالله  تازاتا,AZEEZ ABDULLA,,THAZHATH,2187060088,Active,,S0003,الهند               ,Non-Saudi,PERMANENT
+1054,عزيز عبد الرحمن فارع نهشل,AZEEZ ABDULRAHMAN ,FARIH, NAHSAL,2228384760,Inactive,RESIGNED,S0003,اليمن               ,Non-Saudi,PERMANENT
+1055,عزيز اندرو  بوناشيات,AZEEZ ANDRU PUNACHIYATH ,,PUNACHIYATH,2108275492,Inactive,RESIGNED,S0001,الهند               ,Non-Saudi,PERMANENT
+1056,عزيزة محمد هوساوي,AZEEZAH MUHAMMED ,,ALHOSSAWI,1049470170,Inactive,RESIGNED,S0003,السعودية,Saudi,PERMANENT
+1057,بكر هدم موسى,BOUCAR ADAM, MOUSSA ,AHAMED,2128485659,Inactive,DISMISSED,S0001,النيجر              ,Non-Saudi,TEMPORARY
+1058,دلال محمد بن عبدالله العتيبي,DALAL MUHAMMED ,,ALOTAIBI,1050088614,Inactive,RESIGNED,SAUDA,السعودية,Saudi,PERMANENT
+1059,دالم بلال,DALIM BILLAL,,MIAH,2455751392,Active,,WHOLESALE,بنجلاديش             ,Non-Saudi,PERMANENT
+1060,انعامل الحق فارد,ENAMULHOQUE FARID,,ALAM,2104318627,Active,,S0001,بنجلاديش,Non-Saudi,PERMANENT
+1061,فهد محمد علي حزام,FAHAD MUHAMMED ALI ,,HIZAM,2054902313,Inactive,RESIGNED,S0003,اليمن               ,Non-Saudi,PERMANENT
+1062,فيصل عبد العزيز الفهمي,FAISAL ABDULAZIZ LAFI ,,ALFAHMI,1095919518,Inactive,RESIGNED,SAUDA,السعودية,Saudi,TEMPORARY
+1063,فايز عيضه حاسن الدعدي,FAIZ AYDHA,, AL DAHDI,1064941048,Inactive,RESIGNED,WHOLESALE,السعودية,Saudi,PERMANENT
+1064,فواز صالح فؤاد,FAOZ SALEH FUAD ,,JASTHANIYA,1110149406,Inactive,RESIGNED,S0001,السعودية,Saudi,PERMANENT
+1065,فرحان   ماجسي,FARHAN ALI,MUSHTAQUE,AHMED MAGSI,2414542213,Inactive,,S0001,باكستان             ,Non-Saudi,PERMANENT
+1066,فاروق مياه,FARUKMIAH,,HOMAYOUNMIAH,2246547281,Active,,S0001,بنجلاديش             ,Non-Saudi,PERMANENT
+1067,فاطمة عطيان عبد الرحمان الفهمي,FATHIMA ATHYAN  ,ABDULRAHMAN,ALFAHMI,1091375301,Inactive,RESIGNED,SAUDA,السعودية,Saudi,TEMPORARY
+1068,فضل قادر شيار محمد,FAZAL KADER   ,SHAIR,MOHAMMED,2075350930,Inactive,RESIGNED,S0001,بنجلاديش             ,Non-Saudi,PERMANENT
+1069,فوزي حسن يحي اربع,FOUZY HASSAN YAHYA ,,ARBA,2445028935,Inactive,RESIGNED,S0001,اليمن               ,Non-Saudi,PERMANENT
+1070,قياس الدين حاج الو,GIAS UDDIN,,HAJ AL O,2258332143,Active,,S0001,بنجلاديش             ,Non-Saudi,PERMANENT
+1071,غل خان رودناني محمد يوسف رودنا,GUL KHAN RODNANI,MUHAMMAD YOUSUF,RODNANI,2316730437,Active,,S0001,باكستان             ,Non-Saudi,PERMANENT
+1072,حفيظ   اقبال,HAFEEZ ULLAH,,MUHAMMAD  IQBAL,2360610519,Active,,S0001,باكستان             ,Non-Saudi,PERMANENT
+1073,حلاد عثمان علي,HALADU USMAN ALI,,USMAN ALI,2146576349,Inactive,RESIGNED,S0001,نيجيريا,Non-Saudi,TEMPORARY
+1074,حماده رزق الله جار الكريم تكرو,HAMADAH RAZAKALLAH,JAD ALKARIM,TAKRONI,2268882137,Active,,WHOLESALE,مصر                 ,Non-Saudi,PERMANENT
+1075,حمده نايف حمود العتيبي,HAMDAH NAIF ,,ALOTHAIBI,NA,Inactive,RESIGNED,SAUDA,السعودية,Saudi,PERMANENT
+1076,حميد صبحي بن صويلح الدعدي,HAMEED SUBHI ,,ALDAHDI,1029525852,Inactive,RESIGNED,S0001,السعودية,Saudi,PERMANENT
+1077,حمود فارع مصلح نهشل,HAMOOD FARIH,MUSLIH,NAHSHAL,2157609070,Active,,S0001,اليمن               ,Non-Saudi,PERMANENT
+1078,حنيفة مونوكارن,HANEEFA,,MOONNOKKARAN,2162301432,Active,,S0001,الهند               ,Non-Saudi,PERMANENT
+1079,هاني احمد عبده محمد,HANI AHMED ,,ABDU MUHAMMED,2269731622,Inactive,RESIGNED,S0001,مصر                 ,Non-Saudi,PERMANENT
+1080,حسينه عطيان عبدالرحمن الفهمي,HASEENAH, ATHYAN ,ALFAHMI,1100448065,Inactive,RESIGNED,SAUDA,السعودية,Saudi,PERMANENT
+1081,هاسكر   ازهونظ,HASKER,,AZHUVATH,2242126528,Active,,S0001,الهند               ,Non-Saudi,PERMANENT
+1082,حسن مكي حسن حاشد,HASSAN MAKKI ,,HASSAN HASHID,2208070702,Inactive,RESIGNED,WHOLESALE,اليمن               ,Non-Saudi,TEMPORARY
+1083,هيا سليمان بن سالم الفهمي,HAYA SULAIMAN ,BIN SALIM ,ALFAHMI,1106670142,Inactive,RESIGNED,SAUDA,السعودية,Saudi,PERMANENT
+1084,حفظ الله محمد أحمد قائد بحير,HEFDHALLAH MUHAMMED,AHMED QAED,BAHEER,2322912540,Active,,S0001,اليمن               ,Non-Saudi,PERMANENT
+1085,هلال فارع مصلح نهشل,HILAL FARIH,MUSLIH,NAHSHAL,2193575582,Inactive,,S0001,اليمن               ,Non-Saudi,PERMANENT
+1086,هلاله هليل معيوف الفهمي,HILALAH HULAIL ,,ALFAHMI,1071539702,Inactive,DISMISSED,SAUDA,السعودية,Saudi,PERMANENT
+1087,همة   علي,HIMAT ALI MAGSI,MUSHTAQUE,AHMED,2401773169,Active,,S0001,باكستان             ,Non-Saudi,PERMANENT
+1088,ابراهيم علي الزهراني,IBRAHIM ALI ,,ALZAHRANI,1080971698,Inactive,RESIGNED,S0001,السعودية,Saudi,PERMANENT
+1089,ابراهيم ماتوبارة,IBRAHIM,,MUTTUPARA,2253655563,Active,,S0001,الهند               ,Non-Saudi,PERMANENT
+1090,عمران علي بروهي غلام,IMRAN ALI BROHI,,GHULAM,2336037094,Active,,S0003,باكستان,Non-Saudi,PERMANENT
+1091,عمران علي شاهي حسين شاهي,IMRAN ALI SHAHI GADA,,HUSSAIN SHAHI,2289250694,Active,,WHOLESALE,باكستان             ,Non-Saudi,PERMANENT

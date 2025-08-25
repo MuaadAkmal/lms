@@ -12,6 +12,7 @@ export function LeaveRequestForm({ userId }: LeaveRequestFormProps) {
   const [startDateTime, setStartDateTime] = useState('')
   const [endDateTime, setEndDateTime] = useState('')
   const [reason, setReason] = useState('')
+  const [description, setDescription] = useState('')
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
 
@@ -66,19 +67,25 @@ export function LeaveRequestForm({ userId }: LeaveRequestFormProps) {
       return
     }
 
+    // Merge reason and description
+    const mergedReason = description.trim()
+      ? `${reason.trim()}${reason.trim() ? ': ' : ''}${description.trim()}`
+      : reason.trim()
+
     startTransition(async () => {
       try {
         await createLeaveRequest({
           userId,
           startDate: new Date(startDateTime),
           endDate: new Date(endDateTime),
-          reason: reason.trim()
+          reason: mergedReason
         })
 
         // Reset form
         setStartDateTime('')
         setEndDateTime('')
         setReason('')
+        setDescription('')
 
         router.refresh()
       } catch (error) {
@@ -150,14 +157,36 @@ export function LeaveRequestForm({ userId }: LeaveRequestFormProps) {
         <label htmlFor="reason" className="block text-sm font-medium text-gray-700 mb-2">
           Reason for Leave *
         </label>
-        <textarea
+        <select
           id="reason"
           value={reason}
           onChange={(e) => setReason(e.target.value)}
           className="input-field"
-          rows={4}
-          placeholder="e.g., Doctor appointment, Personal emergency, Vacation..."
           required
+          disabled={isPending}
+        >
+          <option value="">Select a reason</option>
+          <option value="Hospital case">Hospital case</option>
+          <option value="Doctor Appointment">Doctor Appointment</option>
+          <option value="Personal Emergency">Personal Emergency</option>
+          <option value="Vacation">Vacation</option>
+          <option value="Family Commitment">Family Commitment</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      {/* Description */}
+      <div>
+        <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+          Description (optional)
+        </label>
+        <input
+          id="description"
+          type="text"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          className="input-field"
+          placeholder="Add more details if needed"
           disabled={isPending}
         />
       </div>

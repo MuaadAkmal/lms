@@ -6,13 +6,17 @@ import { useToast } from '@/components/toast-provider'
 
 interface Employee {
   id: string
-  name: string
+  firstName: string
+  middleName?: string | null
+  lastName: string
   employeeId: string
   email: string
   role: string
   supervisorId: string | null
   supervisor?: {
-    name: string
+    firstName: string
+    middleName?: string | null
+    lastName: string
     employeeId: string
   } | null
   _count?: {
@@ -59,8 +63,9 @@ export function EmployeeSearch({
     // Don't show admin users in any employee table
     if (employee.role === 'ADMIN') return false
 
+    const fullName = [employee.firstName, employee.middleName, employee.lastName].filter(Boolean).join(' ')
     const matchesSearch = searchTerm === '' ||
-      employee.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       employee.employeeId.toLowerCase().includes(searchTerm.toLowerCase()) ||
       employee.email.toLowerCase().includes(searchTerm.toLowerCase())
 
@@ -186,7 +191,7 @@ export function EmployeeSearch({
             <option value="unassigned">No Supervisor</option>
             {userRole === 'ADMIN' && supervisors.map(supervisor => (
               <option key={supervisor.id} value={supervisor.id}>
-                {supervisor.name} ({supervisor.employeeId})
+                {[supervisor.firstName, supervisor.middleName, supervisor.lastName].filter(Boolean).join(' ')} ({supervisor.employeeId})
               </option>
             ))}
           </select>
@@ -234,7 +239,7 @@ export function EmployeeSearch({
                 <React.Fragment key={employee.id}>
                   <tr className="hover:bg-gray-50">
                     <td className="table-cell">
-                      <div className="font-medium text-gray-900">{employee.name}</div>
+                      <div className="font-medium text-gray-900">{employee.firstName}</div>
                     </td>
                     <td className="table-cell">
                       <span className="font-mono text-sm">{employee.employeeId}</span>
@@ -244,8 +249,8 @@ export function EmployeeSearch({
                     </td>
                     <td className="table-cell">
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${employee.role === 'ADMIN' ? 'bg-purple-100 text-purple-800' :
-                          employee.role === 'SUPERVISOR' ? 'bg-blue-100 text-blue-800' :
-                            'bg-green-100 text-green-800'
+                        employee.role === 'SUPERVISOR' ? 'bg-blue-100 text-blue-800' :
+                          'bg-green-100 text-green-800'
                         }`}>
                         {employee.role}
                       </span>
@@ -253,7 +258,7 @@ export function EmployeeSearch({
                     <td className="table-cell">
                       {employee.supervisor ? (
                         <div className="text-sm">
-                          <div className="font-medium">{employee.supervisor.name}</div>
+                          <div className="font-medium">{[employee.supervisor?.firstName, employee.supervisor?.middleName, employee.supervisor?.lastName].filter(Boolean).join(' ')}</div>
                           <div className="text-gray-500">({employee.supervisor.employeeId})</div>
                         </div>
                       ) : (
@@ -289,7 +294,7 @@ export function EmployeeSearch({
                             <option value="">Select Supervisor</option>
                             {supervisors.map((supervisor) => (
                               <option key={supervisor.id} value={supervisor.id}>
-                                {supervisor.name}
+                                {[supervisor.firstName, supervisor.middleName, supervisor.lastName].filter(Boolean).join(' ')}
                               </option>
                             ))}
                           </select>

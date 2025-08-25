@@ -4,12 +4,16 @@ import { useState } from 'react'
 
 interface User {
   id: string
-  name: string
+  firstName: string
+  middleName?: string | null
+  lastName: string
   employeeId: string
   email: string
   role: string
   supervisor?: {
-    name: string
+    firstName: string
+    middleName?: string | null
+    lastName: string
     employeeId: string
   } | null
   _count: {
@@ -30,7 +34,8 @@ export function UsersTable({ users, onUserUpdate }: UsersTableProps) {
   const [resetResult, setResetResult] = useState<{ userId: string, password: string } | null>(null)
 
   const filteredUsers = users.filter(user => {
-    const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const fullName = [user.firstName, user.middleName, user.lastName].filter(Boolean).join(' ');
+    const matchesSearch = fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.employeeId.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase())
 
@@ -89,7 +94,7 @@ export function UsersTable({ users, onUserUpdate }: UsersTableProps) {
             <h3 className="text-lg font-semibold mb-4">Password Reset Successful</h3>
             <p className="mb-4">
               New temporary password for{' '}
-              <strong>{users.find(u => u.id === resetResult.userId)?.name}</strong>:
+              <strong>{[users.find(u => u.id === resetResult.userId)?.firstName, users.find(u => u.id === resetResult.userId)?.middleName, users.find(u => u.id === resetResult.userId)?.lastName].filter(Boolean).join(' ')}</strong>:
             </p>
             <div className="bg-gray-100 p-3 rounded border flex items-center justify-between">
               <code className="font-mono text-sm">{resetResult.password}</code>
@@ -158,7 +163,7 @@ export function UsersTable({ users, onUserUpdate }: UsersTableProps) {
           <tbody className="table-body">
             {filteredUsers.map((user) => (
               <tr key={user.id}>
-                <td className="table-cell font-medium">{user.name}</td>
+                <td className="table-cell font-medium">{[user.firstName, user.middleName, user.lastName].filter(Boolean).join(' ')}</td>
                 <td className="table-cell">{user.employeeId}</td>
                 <td className="table-cell">{user.email}</td>
                 <td className="table-cell">
@@ -169,7 +174,7 @@ export function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                 <td className="table-cell">
                   {user.supervisor ? (
                     <div>
-                      <div className="font-medium">{user.supervisor.name}</div>
+                      <div className="font-medium">{[user.supervisor?.firstName, user.supervisor?.middleName, user.supervisor?.lastName].filter(Boolean).join(' ')}</div>
                       <div className="text-sm text-primary-500">{user.supervisor.employeeId}</div>
                     </div>
                   ) : (

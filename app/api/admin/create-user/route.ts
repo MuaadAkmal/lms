@@ -16,7 +16,9 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json()
     const {
-      name,
+      firstName,
+      middleName,
+      lastName,
       employeeId,
       email,
       phone,
@@ -25,6 +27,11 @@ export async function POST(request: NextRequest) {
       supervisorId,
       customPassword,
       temporaryPassword,
+      iqamaNo,
+      storeCode,
+      nationality,
+      gosiType,
+      jobTitle,
     } = body
 
     // Support both customPassword and temporaryPassword parameters for backward compatibility
@@ -32,14 +39,18 @@ export async function POST(request: NextRequest) {
 
     // Validate required fields
     if (
-      !name?.trim() ||
+      !firstName?.trim() ||
+      !lastName?.trim() ||
       !employeeId?.trim() ||
       !email?.trim() ||
       !userPassword?.trim() ||
       !role?.trim()
     ) {
       return NextResponse.json(
-        { error: "Name, Employee ID, Email, Password, and Role are required." },
+        {
+          error:
+            "First Name, Last Name, Employee ID, Email, Password, and Role are required.",
+        },
         { status: 400 }
       )
     }
@@ -117,22 +128,30 @@ export async function POST(request: NextRequest) {
     try {
       const newUser = await prisma.user.create({
         data: {
-          name: name.trim(),
+          firstName: firstName.trim(),
+          middleName: middleName?.trim() || null,
+          lastName: lastName.trim(),
           email: email.trim().toLowerCase(),
           employeeId: employeeId.trim(),
           phone: phone?.trim() || null,
           password: hashedPassword,
           role: role.toUpperCase() as any,
           supervisorId: supervisorId || null,
-        },
+          iqamaNo: iqamaNo?.trim() || null,
+          storeCode: storeCode?.trim() || null,
+          nationality: nationality?.trim() || null,
+          gosiType: gosiType || null,
+          jobTitle: jobTitle?.trim() || null,
+        } as any,
       })
 
       return NextResponse.json({
         success: true,
-        message: `User ${name.trim()} (${employeeId.trim()}) created successfully.`,
+        message: `User ${firstName.trim()} ${lastName.trim()} (${employeeId.trim()}) created successfully.`,
         user: {
           id: newUser.id,
-          name: newUser.name,
+          firstName: (newUser as any).firstName,
+          lastName: (newUser as any).lastName,
           employeeId: newUser.employeeId,
           email: newUser.email,
           role: newUser.role,

@@ -13,7 +13,9 @@ interface LeaveRequest {
   status: 'PENDING' | 'APPROVED' | 'REJECTED'
   createdAt: Date
   user?: {
-    name: string
+    firstName: string
+    middleName?: string | null
+    lastName: string
     employeeId: string
   }
 }
@@ -109,7 +111,7 @@ export function LeaveRequestsTable({
               <tr key={request.id}>
                 {showUserInfo && request.user && (
                   <>
-                    <td className="table-cell">{request.user.name}</td>
+                    <td className="table-cell">{[request.user.firstName, request.user.middleName, request.user.lastName].filter(Boolean).join(' ')}</td>
                     <td className="table-cell">{request.user.employeeId}</td>
                   </>
                 )}

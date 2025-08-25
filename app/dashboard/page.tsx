@@ -21,6 +21,7 @@ async function rejectRequest(requestId: string) {
 
 export default async function DashboardPage() {
   const user = await getCurrentUser()
+  // ...existing code...
 
   // Get today's date for filtering
   const today = new Date()
@@ -37,7 +38,9 @@ export default async function DashboardPage() {
     include: {
       user: {
         select: {
-          name: true,
+          firstName: true,
+          middleName: true,
+          lastName: true,
           employeeId: true
         }
       }
@@ -122,18 +125,22 @@ export default async function DashboardPage() {
 
   // For admin and supervisor, fetch detailed employee data with leave requests
   const employeesWithDetails = (user.role === 'ADMIN' || user.role === 'SUPERVISOR') ?
-    await prisma.user.findMany({
+    (await prisma.user.findMany({
       where: user.role === 'ADMIN' ? { role: { not: 'ADMIN' } } : { supervisorId: user.id },
       select: {
         id: true,
-        name: true,
+        firstName: true,
+        middleName: true,
+        lastName: true,
         employeeId: true,
         email: true,
         role: true,
         supervisorId: true,
         supervisor: {
           select: {
-            name: true,
+            firstName: true,
+            middleName: true,
+            lastName: true,
             employeeId: true
           }
         },
@@ -155,27 +162,31 @@ export default async function DashboardPage() {
           }
         }
       },
-      orderBy: { name: 'asc' }
-    }) : []
+      orderBy: { firstName: 'asc' }
+    })) : []
 
   // For admin, fetch all users and supervisors for employee assignment
   const allUsers = user.role === 'ADMIN' ? await prisma.user.findMany({
     where: { role: { not: 'ADMIN' } },
     select: {
       id: true,
-      name: true,
+      firstName: true,
+      middleName: true,
+      lastName: true,
       employeeId: true,
       email: true,
       role: true,
       supervisorId: true,
       supervisor: {
         select: {
-          name: true,
+          firstName: true,
+          middleName: true,
+          lastName: true,
           employeeId: true
         }
       }
     },
-    orderBy: { name: 'asc' }
+    orderBy: { firstName: 'asc' }
   }) : []
 
   const supervisors = user.role === 'ADMIN' ? allUsers.filter((u: any) => u.role === 'SUPERVISOR') :
@@ -184,7 +195,9 @@ export default async function DashboardPage() {
         where: { role: 'SUPERVISOR' },
         select: {
           id: true,
-          name: true,
+          firstName: true,
+          middleName: true,
+          lastName: true,
           employeeId: true,
           email: true,
           role: true,
@@ -197,7 +210,7 @@ export default async function DashboardPage() {
       {/* Header Section */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
-        <p className="text-gray-600">Welcome back, {user.name}! ({user.role})</p>
+        <p className="text-gray-600">Welcome back, {[user.firstName, user.middleName, user.lastName].filter(Boolean).join(' ')}! ({user.role})</p>
       </div>
 
       {/* Stats Cards */}

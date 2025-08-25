@@ -12,7 +12,9 @@ export async function POST(request: NextRequest) {
     }
 
     const {
-      name,
+      firstName,
+      middleName,
+      lastName,
       employeeId,
       email,
       role,
@@ -23,9 +25,12 @@ export async function POST(request: NextRequest) {
 
     const password = customPassword || temporaryPassword
 
-    if (!name || !employeeId || !email || !password) {
+    if (!firstName || !lastName || !employeeId || !email || !password) {
       return NextResponse.json(
-        { error: "Name, employee ID, email, and password are required" },
+        {
+          error:
+            "First name, last name, employee ID, email, and password are required",
+        },
         { status: 400 }
       )
     }
@@ -50,17 +55,20 @@ export async function POST(request: NextRequest) {
     // Create the user
     const newUser = await prisma.user.create({
       data: {
-        name,
+        firstName,
+        middleName: middleName || null,
+        lastName,
         employeeId,
         email,
         password: hashedPassword,
         role: role as "EMPLOYEE" | "SUPERVISOR" | "ADMIN",
         supervisorId: supervisorId || null,
-      },
+      } as any,
       include: {
         supervisor: {
           select: {
-            name: true,
+            firstName: true,
+            lastName: true,
             employeeId: true,
           },
         },
@@ -71,7 +79,9 @@ export async function POST(request: NextRequest) {
       success: true,
       user: {
         id: newUser.id,
-        name: newUser.name,
+        firstName: (newUser as any).firstName,
+        middleName: (newUser as any).middleName,
+        lastName: (newUser as any).lastName,
         employeeId: newUser.employeeId,
         email: newUser.email,
         role: newUser.role,

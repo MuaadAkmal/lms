@@ -5,12 +5,16 @@ import { useRouter } from 'next/navigation'
 
 interface User {
   id: string
-  name: string
+  firstName: string
+  middleName?: string | null
+  lastName: string
   employeeId: string
   email: string
   role: string
   supervisor?: {
-    name: string
+    firstName: string
+    middleName?: string | null
+    lastName: string
     employeeId: string
   } | null
 }
@@ -28,12 +32,19 @@ export function AdminUserManagement({ users, supervisors }: AdminUserManagementP
   const router = useRouter()
 
   const [newUser, setNewUser] = useState({
-    name: '',
+    firstName: '',
+    middleName: '',
+    lastName: '',
     employeeId: '',
     email: '',
     role: 'EMPLOYEE',
     supervisorId: '',
-    customPassword: ''
+    customPassword: '',
+    iqamaNo: '',
+    nationality: '',
+    storeCode: '',
+    gosiType: '',
+    jobTitle: ''
   })
 
   const handleAddUser = async (e: React.FormEvent) => {
@@ -51,12 +62,19 @@ export function AdminUserManagement({ users, supervisors }: AdminUserManagementP
       if (response.ok) {
         setSuccess('User created successfully!')
         setNewUser({
-          name: '',
+          firstName: '',
+          middleName: '',
+          lastName: '',
           employeeId: '',
           email: '',
           role: 'EMPLOYEE',
           supervisorId: '',
-          customPassword: ''
+          customPassword: '',
+          iqamaNo: '',
+          nationality: '',
+          storeCode: '',
+          gosiType: '',
+          jobTitle: ''
         })
         setIsAddModalOpen(false)
         router.refresh()
@@ -166,13 +184,13 @@ export function AdminUserManagement({ users, supervisors }: AdminUserManagementP
             <tbody className="table-body">
               {users.map((user) => (
                 <tr key={user.id}>
-                  <td className="table-cell">{user.name}</td>
+                  <td className="table-cell">{[user.firstName, user.middleName, user.lastName].filter(Boolean).join(' ')}</td>
                   <td className="table-cell">{user.employeeId}</td>
                   <td className="table-cell">{user.email}</td>
                   <td className="table-cell">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${user.role === 'ADMIN' ? 'bg-purple-100 text-purple-800' :
-                        user.role === 'SUPERVISOR' ? 'bg-blue-100 text-blue-800' :
-                          'bg-green-100 text-green-800'
+                      user.role === 'SUPERVISOR' ? 'bg-blue-100 text-blue-800' :
+                        'bg-green-100 text-green-800'
                       }`}>
                       {user.role}
                     </span>
@@ -180,7 +198,7 @@ export function AdminUserManagement({ users, supervisors }: AdminUserManagementP
                   <td className="table-cell">
                     {user.supervisor ? (
                       <span className="text-gray-900">
-                        {user.supervisor.name} ({user.supervisor.employeeId})
+                        {[user.supervisor?.firstName, user.supervisor?.middleName, user.supervisor?.lastName].filter(Boolean).join(' ')} ({user.supervisor?.employeeId})
                       </span>
                     ) : (
                       <span className="text-red-500 italic">No supervisor assigned</span>
@@ -189,14 +207,14 @@ export function AdminUserManagement({ users, supervisors }: AdminUserManagementP
                   <td className="table-cell">
                     <div className="flex space-x-2">
                       <button
-                        onClick={() => handleResetPassword(user.id, user.name)}
+                        onClick={() => handleResetPassword(user.id, [user.firstName, user.middleName, user.lastName].filter(Boolean).join(' '))}
                         disabled={isLoading}
                         className="text-sm bg-yellow-600 text-white px-2 py-1 rounded hover:bg-yellow-700 disabled:opacity-50"
                       >
                         Reset Password
                       </button>
                       <button
-                        onClick={() => handleDeleteUser(user.id, user.name)}
+                        onClick={() => handleDeleteUser(user.id, [user.firstName, user.middleName, user.lastName].filter(Boolean).join(' '))}
                         disabled={isLoading}
                         className="text-sm bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700 disabled:opacity-50"
                       >
@@ -218,15 +236,77 @@ export function AdminUserManagement({ users, supervisors }: AdminUserManagementP
             <h3 className="text-lg font-semibold mb-4">Add New User</h3>
             <form onSubmit={handleAddUser} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Full Name
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">First Name *</label>
                 <input
                   type="text"
-                  value={newUser.name}
-                  onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
+                  value={newUser.firstName}
+                  onChange={(e) => setNewUser({ ...newUser, firstName: e.target.value })}
                   className="input-field"
+                  placeholder="First Name"
                   required
+                />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Middle Name *</label>
+                <input
+                  type="text"
+                  value={newUser.middleName}
+                  onChange={(e) => setNewUser({ ...newUser, middleName: e.target.value })}
+                  className="input-field"
+                  placeholder="Middle Name"
+                  required
+                />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Last Name *</label>
+                <input
+                  type="text"
+                  value={newUser.lastName}
+                  onChange={(e) => setNewUser({ ...newUser, lastName: e.target.value })}
+                  className="input-field"
+                  placeholder="Last Name"
+                  required
+                />
+
+                <label className="block text-sm font-medium text-gray-700 mb-1">Iqama No</label>
+                <input
+                  type="text"
+                  value={newUser.iqamaNo || ''}
+                  onChange={(e) => setNewUser({ ...newUser, iqamaNo: e.target.value })}
+                  className="input-field"
+                  placeholder="Iqama No"
+                />
+
+                <label className="block text-sm font-medium text-gray-700 mb-1">Nationality</label>
+                <input
+                  type="text"
+                  value={newUser.nationality || ''}
+                  onChange={(e) => setNewUser({ ...newUser, nationality: e.target.value })}
+                  className="input-field"
+                  placeholder="Nationality"
+                />
+
+                <label className="block text-sm font-medium text-gray-700 mb-1">Store Code</label>
+                <input
+                  type="text"
+                  value={newUser.storeCode || ''}
+                  onChange={(e) => setNewUser({ ...newUser, storeCode: e.target.value })}
+                  className="input-field"
+                  placeholder="Store Code"
+                />
+
+                <label className="block text-sm font-medium text-gray-700 mb-1">GOSI Type</label>
+                <input
+                  type="text"
+                  value={newUser.gosiType || ''}
+                  onChange={(e) => setNewUser({ ...newUser, gosiType: e.target.value })}
+                  className="input-field"
+                  placeholder="GOSI Type"
+                />
+
+                <label className="block text-sm font-medium text-gray-700 mb-1">Job Title</label>
+                <input
+                  type="text"
+                  value={newUser.jobTitle || ''}
+                  onChange={(e) => setNewUser({ ...newUser, jobTitle: e.target.value })}
+                  className="input-field"
+                  placeholder="Job Title"
                 />
               </div>
 
@@ -284,7 +364,7 @@ export function AdminUserManagement({ users, supervisors }: AdminUserManagementP
                     <option value="">Select Supervisor</option>
                     {supervisors.map((supervisor) => (
                       <option key={supervisor.id} value={supervisor.id}>
-                        {supervisor.name} ({supervisor.employeeId})
+                        {[supervisor.firstName, supervisor.middleName, supervisor.lastName].filter(Boolean).join(' ')} ({supervisor.employeeId})
                       </option>
                     ))}
                   </select>
